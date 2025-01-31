@@ -1,14 +1,17 @@
 import express, { Request, Response } from 'express';
 import { logger } from './middlewares/logger';
+import bodyParser from 'body-parser';
 import path from 'path';
 import cors from 'cors';
 import 'colors';
 import 'reflect-metadata';
 
 // route imports
-import propertyRoutes from './routes/propertyRoutes';
+import propertyRoutes from './routes/property_routes';
 
 const app = express();
+
+// MIDDLEWARE CONFIGURATION
 
 // Body parser
 app.use(express.json());
@@ -17,9 +20,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(logger);
 app.use(cors());
 
-// ADD API ROUTES HERE
+// API ROUTES
 app.use('/api/v1/properties', propertyRoutes);
 
-// ADD ERROR HANDLER HERE
+// ERROR HANDLER
 
 export default app;

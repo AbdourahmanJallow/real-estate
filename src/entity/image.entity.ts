@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Property } from './property.entity';
 
 @Entity()
 export class Image {
@@ -13,4 +14,10 @@ export class Image {
 
   @Column()
   size!: number;
+
+  /**
+   * A property has many images, an image belongs to a property(id)
+   */
+  @ManyToOne(() => Property, (property) => property.images)
+  property!: Property;
 }

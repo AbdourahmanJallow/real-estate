@@ -17,3 +17,12 @@ export const connectDB = async () => {
     process.exit(1);
   }
 };
+
+// connectDB();
+
+// mongoose.connection.on('error', (error: Error) => {
+//   console.log(
+//     `1. 🔥 Common Error caused issue → : check your .env file first and add your mongodb url`
+//   );
+//   console.error(`2. 🚫 Error → : ${error.message}`);
+// });

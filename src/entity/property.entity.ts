@@ -1,5 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
 import { User } from './user.entity';
+import { Image } from './image.entity';
 
 @Entity()
 export class Property {
@@ -18,8 +25,8 @@ export class Property {
   @Column()
   location!: string;
 
-  @Column('text', { array: true })
-  images!: string[];
+  @OneToMany(() => Image, (image) => image)
+  images!: Image[];
 
   @Column()
   status!: 'Available' | 'Rented';

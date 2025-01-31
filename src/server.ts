@@ -1,21 +1,11 @@
 import dotenv from 'dotenv';
 dotenv.config();
 import 'colors';
+import { AppDataSource } from './data-source';
 
 const PORT = process.env.PORT || 8800;
 
-// connectDB();
-
-// mongoose.connection.on('error', (error: Error) => {
-//   console.log(
-//     `1. 🔥 Common Error caused issue → : check your .env file first and add your mongodb url`
-//   );
-//   console.error(`2. 🚫 Error → : ${error.message}`);
-// });
-
 import app from './app';
-
-import { AppDataSource } from './data-source';
 
 AppDataSource.initialize()
   .then(async () => {
