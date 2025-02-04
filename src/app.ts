@@ -8,20 +8,21 @@ import 'reflect-metadata';
 
 // route imports
 import propertyRoutes from './routes/property_routes';
+import errorHandler from './middlewares/errorHandler';
 
 const app = express();
 
 // MIDDLEWARE CONFIGURATION
 app.use(cors());
-// Body parser
 app.use(express.json());
-// Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.urlencoded({ extended: true }));
 app.use(logger);
 
 // API ROUTES
 app.use('/api/v1/properties', propertyRoutes);
 
 // ERROR HANDLER
+app.use(errorHandler);
 
 export default app;
