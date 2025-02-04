@@ -3,7 +3,7 @@ import { User } from './user.entity';
 import { Property } from './property.entity';
 
 @Entity()
-export class Transaction_ {
+export class PropertyTransaction {
   @PrimaryGeneratedColumn()
   id!: number;
 

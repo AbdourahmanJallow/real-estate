@@ -7,10 +7,10 @@ export class Image {
   id!: number;
 
   @Column()
-  name!: string;
+  url!: string;
 
   @Column()
-  filename!: string;
+  filename?: string;
 
   @Column()
   size!: number;

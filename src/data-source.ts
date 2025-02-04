@@ -1,8 +1,9 @@
 import 'reflect-metadata';
 import { DataSource } from 'typeorm';
-import { User } from './entity/user.entity';
-import { Property } from './entity/property.entity';
-import { Image } from './entity/image.entity';
+import { User } from './entities/user.entity';
+import { Property } from './entities/property.entity';
+import { Image } from './entities/image.entity';
+import { Offer } from './entities/offer.entity';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
@@ -13,7 +14,7 @@ export const AppDataSource = new DataSource({
   database: 'real_estate_db',
   synchronize: true,
   logging: false,
-  entities: [User, Property, Image],
+  entities: [User, Property, Image, Offer],
   migrations: [],
   subscribers: [],
 });

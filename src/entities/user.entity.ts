@@ -1,9 +1,9 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { Property } from './property.entity';
-import { USER_ROLE } from '../enums/user_types.enum';
+import { UserRole } from '../types/user_types';
 import { Review } from './review.entity';
 import { Offer } from './offer.entity';
-import { Transaction_ } from './transaction.entity';
+import { PropertyTransaction } from './transaction.entity';
 import { Viewing } from './viewing.entity';
 import { AdminActivityLog } from './admin-activity-log.entity';
 
@@ -23,10 +23,10 @@ export class User {
 
   @Column({
     type: 'enum',
-    enum: USER_ROLE,
-    default: USER_ROLE.TENANT,
+    enum: UserRole,
+    default: UserRole.TENANT,
   })
-  role!: USER_ROLE;
+  role!: UserRole;
 
   /**
    * A User(agent) can have many properties.
@@ -50,10 +50,10 @@ export class User {
    * A User can have multiple transactions
    * A User makes many transactions,
    */
-  @OneToMany(() => Transaction_, (transaction) => transaction.user, {
+  @OneToMany(() => PropertyTransaction, (transaction) => transaction.user, {
     nullable: true,
   })
-  transactions?: Transaction_[];
+  transactions?: PropertyTransaction[];
 
   /**
    * A User can view multiple properties

@@ -9,3 +9,9 @@ export interface IUSER extends Document {
   password: string;
   role: 'Tenant' | 'Agent' | 'Admin';
 }
+
+export enum UserRole {
+  ADMIN = 'admin',
+  AGENT = 'agent',
+  TENANT = 'tenant',
+}

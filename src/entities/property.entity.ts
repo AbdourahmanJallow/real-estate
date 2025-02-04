@@ -9,7 +9,7 @@ import { User } from './user.entity';
 import { Image } from './image.entity';
 import { Review } from './review.entity';
 import { Offer } from './offer.entity';
-import { Transaction_ } from './transaction.entity';
+import { PropertyTransaction } from './transaction.entity';
 import { Viewing } from './viewing.entity';
 
 @Entity()
@@ -56,8 +56,8 @@ export class Property {
   /**
    * Each property can have many transactions
    */
-  @OneToMany(() => Transaction_, (transaction) => transaction.property)
-  transactions!: Transaction_[];
+  @OneToMany(() => PropertyTransaction, (transaction) => transaction.property)
+  transactions!: PropertyTransaction[];
 
   /**
    * A property has many viewings
