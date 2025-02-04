@@ -7,6 +7,10 @@ import {
 } from 'typeorm';
 import { User } from './user.entity';
 import { Image } from './image.entity';
+import { Review } from './review.entity';
+import { Offer } from './offer.entity';
+import { Transaction_ } from './transaction.entity';
+import { Viewing } from './viewing.entity';
 
 @Entity()
 export class Property {
@@ -19,7 +23,7 @@ export class Property {
   @Column()
   description!: string;
 
-  @Column()
+  @Column({ type: 'float' })
   price!: number;
 
   @Column()
@@ -32,8 +36,32 @@ export class Property {
   status!: 'Available' | 'Rented';
 
   /**
-   * Each Property is linked to exactly one User(agent) entity.
+   * Many properties belong to one User(agent) entity.
    */
   @ManyToOne(() => User, (user) => user, { eager: true })
   agent!: User;
+
+  /**
+   * Each property can have many reviews
+   */
+  @OneToMany(() => Review, (review) => review.property)
+  reviews!: Review[];
+
+  /**
+   * Each property can have many offers
+   */
+  @OneToMany(() => Offer, (offer) => offer.property)
+  offers!: Offer[];
+
+  /**
+   * Each property can have many transactions
+   */
+  @OneToMany(() => Transaction_, (transaction) => transaction.property)
+  transactions!: Transaction_[];
+
+  /**
+   * A property has many viewings
+   */
+  @OneToMany(() => Viewing, (viewing) => viewing.property)
+  viewings!: Viewing[];
 }

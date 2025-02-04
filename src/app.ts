@@ -12,13 +12,12 @@ import propertyRoutes from './routes/property_routes';
 const app = express();
 
 // MIDDLEWARE CONFIGURATION
-
+app.use(cors());
 // Body parser
 app.use(express.json());
 // Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(logger);
-app.use(cors());
 
 // API ROUTES
 app.use('/api/v1/properties', propertyRoutes);
