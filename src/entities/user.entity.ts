@@ -7,6 +7,9 @@ import { PropertyTransaction } from './transaction.entity';
 import { Viewing } from './viewing.entity';
 import { AdminActivityLog } from './admin-activity-log.entity';
 
+/**
+ * User: Entity for user attributes and properties
+ */
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
@@ -19,7 +22,7 @@ export class User {
   email!: string;
 
   @Column()
-  password!: number;
+  password!: string;
 
   @Column({
     type: 'enum',
@@ -31,19 +34,31 @@ export class User {
   /**
    * A User(agent) can have many properties.
    */
-  @OneToMany(() => Property, (property) => property.agent, { nullable: true })
+  @OneToMany(() => Property, (property) => property.agent, {
+    nullable: true,
+    eager: true,
+    cascade: true,
+  })
   properties?: Property[];
 
   /**
    * A User(tenant) can make reviews on a property
    */
-  @OneToMany(() => Review, (review) => review.user, { nullable: true })
+  @OneToMany(() => Review, (review) => review.user, {
+    nullable: true,
+    eager: true,
+    cascade: true,
+  })
   reviews?: Review[];
 
   /**
    * A User can make many offers on different properties
    */
-  @OneToMany(() => Offer, (offer) => offer.user, { nullable: true })
+  @OneToMany(() => Offer, (offer) => offer.user, {
+    nullable: true,
+    eager: true,
+    cascade: true,
+  })
   offers?: Offer[];
 
   /**
@@ -52,18 +67,28 @@ export class User {
    */
   @OneToMany(() => PropertyTransaction, (transaction) => transaction.user, {
     nullable: true,
+    eager: true,
+    cascade: true,
   })
   transactions?: PropertyTransaction[];
 
   /**
    * A User can view multiple properties
    */
-  @OneToMany(() => Viewing, (viewing) => viewing.user, { nullable: true })
+  @OneToMany(() => Viewing, (viewing) => viewing.user, {
+    nullable: true,
+    eager: true,
+    cascade: true,
+  })
   viewings?: Viewing[];
 
   /**
    * An admin can have many activty logs
    */
-  @OneToMany(() => AdminActivityLog, (log) => log.admin, { nullable: true })
+  @OneToMany(() => AdminActivityLog, (log) => log.admin, {
+    nullable: true,
+    eager: true,
+    cascade: false,
+  })
   adminLogs?: AdminActivityLog[];
 }

@@ -12,6 +12,6 @@ export class AdminActivityLog {
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   timestamp!: Date;
 
-  @ManyToOne(() => User, (user) => user.adminLogs)
+  @ManyToOne(() => User, (user) => user.adminLogs, { onDelete: 'NO ACTION' })
   admin!: User;
 }

@@ -20,5 +20,7 @@ const errorHandler = (
 
 export default errorHandler;
 
-// In a real-world application, you would typically
-// use a logging library like Winston or Sentry to handle errors.
+/**
+ * In a real-world application, you would typically
+  use a logging library like Winston or Sentry to handle errors.
+ */

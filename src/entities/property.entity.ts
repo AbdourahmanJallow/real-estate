@@ -29,7 +29,7 @@ export class Property {
   @Column()
   location!: string;
 
-  @OneToMany(() => Image, (image) => image)
+  @OneToMany(() => Image, (image) => image, { cascade: true, eager: true })
   images!: Image[];
 
   @Column()
@@ -38,30 +38,46 @@ export class Property {
   /**
    * Many properties belong to one User(agent) entity.
    */
-  @ManyToOne(() => User, (user) => user, { eager: true })
+  @ManyToOne(() => User, (user) => user, { eager: true, onDelete: 'CASCADE' })
   agent!: User;
 
   /**
    * Each property can have many reviews
    */
-  @OneToMany(() => Review, (review) => review.property)
+  @OneToMany(() => Review, (review) => review.property, {
+    eager: true,
+    cascade: true,
+    nullable: true,
+  })
   reviews!: Review[];
 
   /**
    * Each property can have many offers
    */
-  @OneToMany(() => Offer, (offer) => offer.property)
+  @OneToMany(() => Offer, (offer) => offer.property, {
+    eager: true,
+    cascade: true,
+    nullable: true,
+  })
   offers!: Offer[];
 
   /**
    * Each property can have many transactions
    */
-  @OneToMany(() => PropertyTransaction, (transaction) => transaction.property)
+  @OneToMany(() => PropertyTransaction, (transaction) => transaction.property, {
+    eager: true,
+    cascade: true,
+    nullable: true,
+  })
   transactions!: PropertyTransaction[];
 
   /**
    * A property has many viewings
    */
-  @OneToMany(() => Viewing, (viewing) => viewing.property)
+  @OneToMany(() => Viewing, (viewing) => viewing.property, {
+    eager: true,
+    cascade: true,
+    nullable: true,
+  })
   viewings!: Viewing[];
 }
