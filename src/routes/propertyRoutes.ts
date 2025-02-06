@@ -5,7 +5,7 @@ import {
   deleteProperty,
   updateProperty,
   getProperty,
-} from '../controllers/property_controller';
+} from '../controllers/propertyController';
 
 const router = Router();
 

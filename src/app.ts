@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
 import { logger } from './middlewares/logger';
 import bodyParser from 'body-parser';
 import path from 'path';
@@ -7,7 +7,7 @@ import 'colors';
 import 'reflect-metadata';
 
 // route imports
-import propertyRoutes from './routes/property_routes';
+import propertyRoutes from './routes/propertyRoutes';
 import errorHandler from './middlewares/errorHandler';
 
 const app = express();

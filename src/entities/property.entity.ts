@@ -11,6 +11,7 @@ import { Review } from './review.entity';
 import { Offer } from './offer.entity';
 import { PropertyTransaction } from './transaction.entity';
 import { Viewing } from './viewing.entity';
+import { PropertyStatus } from '../types/property_types';
 
 @Entity()
 export class Property {
@@ -32,8 +33,8 @@ export class Property {
   @OneToMany(() => Image, (image) => image, { cascade: true, eager: true })
   images!: Image[];
 
-  @Column()
-  status!: 'Available' | 'Rented';
+  @Column({ type: 'enum', enum: PropertyStatus })
+  status!: PropertyStatus;
 
   /**
    * Many properties belong to one User(agent) entity.

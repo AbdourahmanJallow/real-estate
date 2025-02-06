@@ -9,3 +9,8 @@ export interface IProperty extends Document {
   status: 'Available' | 'Rented';
   agent: Schema.Types.ObjectId;
 }
+
+export enum PropertyStatus {
+  Available = 'available',
+  Rented = 'rented',
+}
