@@ -8,8 +8,10 @@
     "dev": "nodemon --exec ts-node src/server.ts",
     "build": "tsc",
     "lint": "eslint \"src/**/*.ts\" --config eslint.config.mjs",
-    "typeorm": "typeorm-ts-node-commonjs",
-    "migration:run": "npm run typeorm migration:generate -- -n"
+    "typeorm": "ts-node -r tsconfig-paths/register node_modules/typeorm/cli.js --dataSource src/data-source.ts",
+    "migration:generate": "npm run typeorm migration:generate",
+    "migration:run": "npm run typeorm migration:run",
+    "migration:revert": "npm run typeorm migration:revert -- -n"
   },
   "keywords": [],
   "author": "dex",
@@ -25,6 +27,9 @@
     "eslint": "^9.19.0",
     "globals": "^15.14.0",
     "mongoose": "^8.9.5",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typeorm": "^0.3.20",
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.21.0"
   },
@@ -33,6 +38,6 @@
     "express": "^4.21.2",
     "pg": "^8.13.1",
     "reflect-metadata": "^0.2.2",
-    "typeorm": "^0.3.20"
+    "winston": "^3.17.0"
   }
 }

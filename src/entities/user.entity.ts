@@ -36,7 +36,7 @@ export class User {
    */
   @OneToMany(() => Property, (property) => property.agent, {
     nullable: true,
-    eager: true,
+    // eager: true,
     cascade: true,
   })
   properties?: Property[];
@@ -46,7 +46,7 @@ export class User {
    */
   @OneToMany(() => Review, (review) => review.user, {
     nullable: true,
-    eager: true,
+    // eager: true,
     cascade: true,
   })
   reviews?: Review[];
@@ -56,7 +56,7 @@ export class User {
    */
   @OneToMany(() => Offer, (offer) => offer.user, {
     nullable: true,
-    eager: true,
+    // eager: true,
     cascade: true,
   })
   offers?: Offer[];
@@ -67,7 +67,7 @@ export class User {
    */
   @OneToMany(() => PropertyTransaction, (transaction) => transaction.user, {
     nullable: true,
-    eager: true,
+    // eager: true,
     cascade: true,
   })
   transactions?: PropertyTransaction[];
@@ -77,7 +77,7 @@ export class User {
    */
   @OneToMany(() => Viewing, (viewing) => viewing.user, {
     nullable: true,
-    eager: true,
+    // eager: true,
     cascade: true,
   })
   viewings?: Viewing[];
@@ -87,7 +87,7 @@ export class User {
    */
   @OneToMany(() => AdminActivityLog, (log) => log.admin, {
     nullable: true,
-    eager: true,
+    // eager: true,
     cascade: false,
   })
   adminLogs?: AdminActivityLog[];

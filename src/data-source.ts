@@ -6,6 +6,8 @@ import { Image } from './entities/image.entity';
 import { Offer } from './entities/offer.entity';
 import { PropertyTransaction } from './entities/transaction.entity';
 import { AdminActivityLog } from './entities/admin-activity-log.entity';
+import { Review } from './entities/review.entity';
+import { Viewing } from './entities/viewing.entity';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
@@ -13,17 +15,19 @@ export const AppDataSource = new DataSource({
   port: 5432,
   username: 'postgres',
   password: 'password',
-  database: 'real_estate_db',
-  synchronize: true,
+  database: 'real_estate',
+  synchronize: false,
   logging: false,
   entities: [
     User,
-    Property,
+    Review,
     Image,
     Offer,
+    Viewing,
+    Property,
     PropertyTransaction,
     AdminActivityLog,
   ],
-  migrations: [],
+  migrations: ['src/migration/**/*.ts'],
   subscribers: [],
 });
