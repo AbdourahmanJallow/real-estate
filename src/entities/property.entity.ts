@@ -4,6 +4,8 @@ import {
   Column,
   ManyToOne,
   OneToMany,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { User } from './user.entity';
 import { Image } from './image.entity';
@@ -30,7 +32,10 @@ export class Property {
   @Column()
   location!: string;
 
-  @OneToMany(() => Image, (image) => image, { cascade: true, eager: true })
+  @OneToMany(() => Image, (image) => image.property, {
+    cascade: true,
+    eager: true,
+  })
   images!: Image[];
 
   @Column({ type: 'enum', enum: PropertyStatus })
@@ -39,7 +44,10 @@ export class Property {
   /**
    * Many properties belong to one User(agent) entity.
    */
-  @ManyToOne(() => User, (user) => user, { eager: true, onDelete: 'CASCADE' })
+  @ManyToOne(() => User, (user) => user.properties, {
+    eager: true,
+    onDelete: 'CASCADE',
+  })
   agent!: User;
 
   /**
@@ -48,7 +56,6 @@ export class Property {
   @OneToMany(() => Review, (review) => review.property, {
     eager: true,
     cascade: true,
-    nullable: true,
   })
   reviews!: Review[];
 
@@ -58,7 +65,6 @@ export class Property {
   @OneToMany(() => Offer, (offer) => offer.property, {
     eager: true,
     cascade: true,
-    nullable: true,
   })
   offers!: Offer[];
 
@@ -68,7 +74,6 @@ export class Property {
   @OneToMany(() => PropertyTransaction, (transaction) => transaction.property, {
     eager: true,
     cascade: true,
-    nullable: true,
   })
   transactions!: PropertyTransaction[];
 
@@ -78,7 +83,12 @@ export class Property {
   @OneToMany(() => Viewing, (viewing) => viewing.property, {
     eager: true,
     cascade: true,
-    nullable: true,
   })
   viewings!: Viewing[];
+
+  @CreateDateColumn()
+  createdAt!: Date;
+
+  @UpdateDateColumn()
+  updatedAt?: Date;
 }

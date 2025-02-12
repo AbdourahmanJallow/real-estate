@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class RealEstate1738843340534 implements MigrationInterface {
-    name = 'RealEstate1738843340534'
+export class RealEstate1739371779150 implements MigrationInterface {
+    name = 'RealEstate1739371779150'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`CREATE TABLE "image" ("id" SERIAL NOT NULL, "url" character varying NOT NULL, "filename" character varying NOT NULL, "size" integer NOT NULL, "propertyId" integer, CONSTRAINT "PK_d6db1ab4ee9ad9dbe86c64e4cc3" PRIMARY KEY ("id"))`);
@@ -12,7 +12,8 @@ export class RealEstate1738843340534 implements MigrationInterface {
         await queryRunner.query(`CREATE TABLE "property_transaction" ("id" SERIAL NOT NULL, "amount" integer NOT NULL, "date" TIMESTAMP NOT NULL DEFAULT now(), "type" "public"."property_transaction_type_enum" NOT NULL, "userId" integer, "propertyId" integer, CONSTRAINT "PK_4b297ca9bf4ea32a334fe68f089" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TYPE "public"."viewing_status_enum" AS ENUM('pending', 'completed', 'cancelled')`);
         await queryRunner.query(`CREATE TABLE "viewing" ("id" SERIAL NOT NULL, "scheduledDate" TIMESTAMP NOT NULL, "status" "public"."viewing_status_enum" NOT NULL DEFAULT 'pending', "userId" integer, "propertyId" integer, CONSTRAINT "PK_9e8233ae4b4be4777fd84d9d981" PRIMARY KEY ("id"))`);
-        await queryRunner.query(`CREATE TABLE "property" ("id" SERIAL NOT NULL, "name" character varying NOT NULL, "description" character varying NOT NULL, "price" double precision NOT NULL, "location" character varying NOT NULL, "status" character varying NOT NULL, "agentId" integer, CONSTRAINT "PK_d80743e6191258a5003d5843b4f" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TYPE "public"."property_status_enum" AS ENUM('available', 'rented')`);
+        await queryRunner.query(`CREATE TABLE "property" ("id" SERIAL NOT NULL, "name" character varying NOT NULL, "description" character varying NOT NULL, "price" double precision NOT NULL, "location" character varying NOT NULL, "status" "public"."property_status_enum" NOT NULL, "agentId" integer, CONSTRAINT "PK_d80743e6191258a5003d5843b4f" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "admin_activity_log" ("id" SERIAL NOT NULL, "action" character varying NOT NULL, "timestamp" TIMESTAMP NOT NULL DEFAULT now(), "adminId" integer, CONSTRAINT "PK_40c01e852203c41a67f9a1a47a2" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TYPE "public"."user_role_enum" AS ENUM('admin', 'agent', 'tenant')`);
         await queryRunner.query(`CREATE TABLE "user" ("id" SERIAL NOT NULL, "name" text NOT NULL, "email" character varying NOT NULL, "password" character varying NOT NULL, "role" "public"."user_role_enum" NOT NULL DEFAULT 'tenant', CONSTRAINT "UQ_e12875dfb3b1d92d7d7c5377e22" UNIQUE ("email"), CONSTRAINT "PK_cace4a159ff9f2512dd42373760" PRIMARY KEY ("id"))`);
@@ -45,6 +46,7 @@ export class RealEstate1738843340534 implements MigrationInterface {
         await queryRunner.query(`DROP TYPE "public"."user_role_enum"`);
         await queryRunner.query(`DROP TABLE "admin_activity_log"`);
         await queryRunner.query(`DROP TABLE "property"`);
+        await queryRunner.query(`DROP TYPE "public"."property_status_enum"`);
         await queryRunner.query(`DROP TABLE "viewing"`);
         await queryRunner.query(`DROP TYPE "public"."viewing_status_enum"`);
         await queryRunner.query(`DROP TABLE "property_transaction"`);

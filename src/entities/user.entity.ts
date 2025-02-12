@@ -1,4 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Property } from './property.entity';
 import { UserRole } from '../types/user_types';
 import { Review } from './review.entity';
@@ -15,7 +22,7 @@ export class User {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column('text')
+  @Column()
   name!: string;
 
   @Column({ unique: true })
@@ -35,7 +42,6 @@ export class User {
    * A User(agent) can have many properties.
    */
   @OneToMany(() => Property, (property) => property.agent, {
-    nullable: true,
     // eager: true,
     cascade: true,
   })
@@ -45,7 +51,6 @@ export class User {
    * A User(tenant) can make reviews on a property
    */
   @OneToMany(() => Review, (review) => review.user, {
-    nullable: true,
     // eager: true,
     cascade: true,
   })
@@ -55,7 +60,6 @@ export class User {
    * A User can make many offers on different properties
    */
   @OneToMany(() => Offer, (offer) => offer.user, {
-    nullable: true,
     // eager: true,
     cascade: true,
   })
@@ -65,18 +69,20 @@ export class User {
    * A User can have multiple transactions
    * A User makes many transactions,
    */
-  @OneToMany(() => PropertyTransaction, (transaction) => transaction.user, {
-    nullable: true,
-    // eager: true,
-    cascade: true,
-  })
+  @OneToMany(
+    () => PropertyTransaction,
+    (transaction) => transaction.createdBy,
+    {
+      // eager: true,
+      cascade: true,
+    }
+  )
   transactions?: PropertyTransaction[];
 
   /**
    * A User can view multiple properties
    */
   @OneToMany(() => Viewing, (viewing) => viewing.user, {
-    nullable: true,
     // eager: true,
     cascade: true,
   })
@@ -86,9 +92,14 @@ export class User {
    * An admin can have many activty logs
    */
   @OneToMany(() => AdminActivityLog, (log) => log.admin, {
-    nullable: true,
     // eager: true,
     cascade: false,
   })
   adminLogs?: AdminActivityLog[];
+
+  @CreateDateColumn()
+  createdAt!: Date;
+
+  @UpdateDateColumn()
+  updatedAt?: Date;
 }

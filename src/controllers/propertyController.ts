@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import asyncHandler from '../middlewares/asyncHandler';
 import { AppDataSource } from '../data-source';
 import { Property } from '../entities/property.entity';
+import { PropertyStatus } from '../types/property_types';
 
 const propertyRepo = AppDataSource.getRepository(Property);
 
@@ -13,9 +14,7 @@ const propertyRepo = AppDataSource.getRepository(Property);
  */
 export const getProperties = asyncHandler(
   async (req: Request, res: Response): Promise<void> => {
-    const properties = await propertyRepo.find({
-      relations: ['reviews', 'transactions', 'offers', 'viewings'],
-    });
+    const properties = await propertyRepo.find();
 
     res.status(200).json({
       success: true,
@@ -48,9 +47,13 @@ export const createProperty = asyncHandler(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     await AppDataSource.transaction(async (transactionEntityManager) => {
       const propertyRepo = transactionEntityManager.getRepository(Property);
-      const property = propertyRepo.create(req.body);
 
-      const result = await AppDataSource.getRepository(Property).save(property);
+      const property = propertyRepo.create({
+        ...req.body,
+        status: PropertyStatus.Available,
+      });
+
+      const result = await propertyRepo.save(property);
 
       res.status(200).json({
         success: true,
@@ -68,7 +71,25 @@ export const createProperty = asyncHandler(
  */
 export const updateProperty = asyncHandler(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    res.send('Update Property Function not implemented');
+    const property = await propertyRepo.findBy({
+      id: parseInt(req.params.id),
+    });
+
+    if (!property) {
+      throw new Error(`Property ${req.params.id} not found.`);
+    }
+
+    const result = await propertyRepo.update(
+      {
+        id: parseInt(req.params.id),
+      },
+      { ...req.body }
+    );
+
+    res.status(200).json({
+      success: true,
+      data: result,
+    });
   }
 );
 
@@ -79,7 +100,20 @@ export const updateProperty = asyncHandler(
  */
 export const deleteProperty = asyncHandler(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    res.send('Delete Property Function not implemented');
+    const property = await propertyRepo.findBy({
+      id: parseInt(req.params.id),
+    });
+
+    if (!property) {
+      throw new Error(`Property ${req.params.id} not found.`);
+    }
+
+    const result = await propertyRepo.remove(property);
+
+    res.status(200).json({
+      success: true,
+      data: result,
+    });
   }
 );
 

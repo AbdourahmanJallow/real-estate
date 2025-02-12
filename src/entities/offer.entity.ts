@@ -1,4 +1,11 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Property } from './property.entity';
 import { User } from './user.entity';
 import { OfferStatus } from '../types/offer_types';
@@ -21,4 +28,10 @@ export class Offer {
 
   @ManyToOne(() => User, (user) => user.offers, { onDelete: 'CASCADE' })
   user!: User;
+
+  @CreateDateColumn()
+  createdAt!: Date;
+
+  @UpdateDateColumn()
+  updatedAt?: Date;
 }
