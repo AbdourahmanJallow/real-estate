@@ -1,5 +1,6 @@
 /**
  * @author Abdourahman Jallow
+ * @description Real Estate API
  */
 
 import dotenv from 'dotenv';
@@ -14,7 +15,7 @@ import app from './app';
 AppDataSource.initialize()
   .then(async () => {
     const server = app.listen(PORT, () => {
-      console.log(`Server running on http://localhost:${PORT}`);
+      console.log(`Server running on http://localhost:${PORT}`.bgCyan.bold);
     });
 
     // Handle unhandled promise rejections

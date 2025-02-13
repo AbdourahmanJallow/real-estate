@@ -7,7 +7,7 @@ import 'colors';
 import 'reflect-metadata';
 
 // route imports
-import propertyRoutes from './routes/propertyRoutes';
+import propertyRoutes from './routes/property.routes';
 import errorHandler from './middlewares/errorHandler';
 
 const app = express();
