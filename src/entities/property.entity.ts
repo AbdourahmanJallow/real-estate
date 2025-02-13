@@ -13,7 +13,7 @@ import { Review } from './review.entity';
 import { Offer } from './offer.entity';
 import { PropertyTransaction } from './transaction.entity';
 import { Viewing } from './viewing.entity';
-import { PropertyStatus } from '../types/property_types';
+import { PropertyStatus } from '../types/property.types';
 
 @Entity()
 export class Property {

@@ -1,10 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 import asyncHandler from '../middlewares/asyncHandler';
-import { AppDataSource } from '../data-source';
-import { Property } from '../entities/property.entity';
-import { PropertyStatus } from '../types/property_types';
+import { PropertyService } from '../services/property.service';
 
-const propertyRepo = AppDataSource.getRepository(Property);
+const propertyService = new PropertyService();
 
 /**
  * @desc        Get all properties
@@ -14,12 +12,9 @@ const propertyRepo = AppDataSource.getRepository(Property);
  */
 export const getProperties = asyncHandler(
   async (req: Request, res: Response): Promise<void> => {
-    const properties = await propertyRepo.find();
+    const result = await propertyService.findAll();
 
-    res.status(200).json({
-      success: true,
-      data: properties,
-    });
+    res.status(200).json(result);
   }
 );
 
@@ -30,11 +25,9 @@ export const getProperties = asyncHandler(
  */
 export const getProperty = asyncHandler(
   async (req: Request, res: Response): Promise<void> => {
-    const propertyId = parseInt(req.params.id);
+    const result = await propertyService.findById(parseInt(req.params.id));
 
-    const property = await propertyRepo.findOne({ where: { id: propertyId } });
-
-    res.status(200).json({ success: true, data: property });
+    res.status(200).json(result);
   }
 );
 
@@ -45,22 +38,9 @@ export const getProperty = asyncHandler(
  */
 export const createProperty = asyncHandler(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    await AppDataSource.transaction(async (transactionEntityManager) => {
-      const propertyRepo = transactionEntityManager.getRepository(Property);
+    const response = await propertyService.create(req.body);
 
-      const property = propertyRepo.create({
-        ...req.body,
-        status: PropertyStatus.Available,
-      });
-
-      const result = await propertyRepo.save(property);
-
-      res.status(200).json({
-        success: true,
-        message: 'property created successfully.',
-        data: result,
-      });
-    });
+    res.status(200).json(response);
   }
 );
 
@@ -71,25 +51,12 @@ export const createProperty = asyncHandler(
  */
 export const updateProperty = asyncHandler(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    const property = await propertyRepo.findBy({
-      id: parseInt(req.params.id),
-    });
-
-    if (!property) {
-      throw new Error(`Property ${req.params.id} not found.`);
-    }
-
-    const result = await propertyRepo.update(
-      {
-        id: parseInt(req.params.id),
-      },
-      { ...req.body }
+    const response = await propertyService.update(
+      parseInt(req.params.id),
+      req.body
     );
 
-    res.status(200).json({
-      success: true,
-      data: result,
-    });
+    res.status(200).json(response);
   }
 );
 
@@ -100,20 +67,9 @@ export const updateProperty = asyncHandler(
  */
 export const deleteProperty = asyncHandler(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    const property = await propertyRepo.findBy({
-      id: parseInt(req.params.id),
-    });
+    const response = await propertyService.delete(parseInt(req.params.id));
 
-    if (!property) {
-      throw new Error(`Property ${req.params.id} not found.`);
-    }
-
-    const result = await propertyRepo.remove(property);
-
-    res.status(200).json({
-      success: true,
-      data: result,
-    });
+    res.status(200).json(response);
   }
 );
 

@@ -1,0 +1,83 @@
+import { AppDataSource } from '../data-source';
+import { Repository } from 'typeorm';
+import { Property } from '../entities/property.entity';
+import {
+  CreatePropertyDTO,
+  PropertyStatus,
+  ServiceResponse,
+  UpdatePropertyDTO,
+} from '../types/property.types';
+
+import { User } from '../entities/user.entity';
+
+export class PropertyService {
+  private propertyRepo: Repository<Property>;
+
+  constructor() {
+    this.propertyRepo = AppDataSource.getRepository(Property);
+  }
+
+  async findAll(): Promise<ServiceResponse<Property[]>> {
+    const properties = await this.propertyRepo.find();
+
+    return {
+      success: true,
+      data: properties,
+    };
+  }
+
+  async findById(id: number): Promise<ServiceResponse<Property>> {
+    const property = await this.propertyRepo.findOneBy({ id });
+
+    if (!property) throw new Error(`Property ${id} not found.`);
+
+    return { success: true, data: property };
+  }
+
+  async create(
+    data: CreatePropertyDTO,
+    agent?: User
+  ): Promise<ServiceResponse<Property>> {
+    return await AppDataSource.transaction(async (transactionManager) => {
+      //   data.agent = agent;
+      // Perform validations
+      if (!data.name || !data.description || !data.price || !data.location) {
+        throw new Error('Missing required property fields.');
+      }
+
+      const property = transactionManager.create(Property, {
+        ...data,
+        status: PropertyStatus.AVAILABLE,
+      });
+
+      const result = await transactionManager.save(property);
+
+      return { success: true, data: result };
+    });
+  }
+
+  async update(
+    id: number,
+    data: UpdatePropertyDTO
+  ): Promise<ServiceResponse<Property>> {
+    const property = await this.propertyRepo.findOneBy({ id: id });
+
+    if (!property) throw new Error(`Property ${id} not found`);
+
+    Object.assign(property, data);
+
+    const updated = await this.propertyRepo.save(property);
+
+    return { success: true, data: updated };
+  }
+
+  async delete(id: number): Promise<ServiceResponse<Property>> {
+    const property = await this.propertyRepo.findOneBy({ id: id });
+
+    if (!property) throw new Error(`Property ${id} not found.`);
+
+    const result = await this.propertyRepo.remove(property);
+
+    return { success: true, data: result };
+  }
+}

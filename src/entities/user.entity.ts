@@ -7,7 +7,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Property } from './property.entity';
-import { UserRole } from '../types/user_types';
+import { UserRole } from '../types/user.types';
 import { Review } from './review.entity';
 import { Offer } from './offer.entity';
 import { PropertyTransaction } from './transaction.entity';
