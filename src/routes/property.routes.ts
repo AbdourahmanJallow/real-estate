@@ -6,6 +6,10 @@ import {
   updateProperty,
   getProperty,
 } from '../controllers/property.controller';
+import { authenticateJWT } from '../middlewares/authMiddleware';
+/**
+ * TODO: allow only authenticated users to create, update, and delete properties
+ */
 
 const router = Router();
 

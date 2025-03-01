@@ -8,6 +8,8 @@ import 'reflect-metadata';
 
 // route imports
 import propertyRoutes from './routes/property.routes';
+import authRoutes from './routes/auth.routes';
+
 import errorHandler from './middlewares/errorHandler';
 
 const app = express();
@@ -20,6 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(logger);
 
 // API ROUTES
+app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/properties', propertyRoutes);
 
 // function listRoutes(app: express.Application) {

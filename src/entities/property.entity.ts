@@ -96,14 +96,18 @@ export class Property {
 
   @BeforeInsert()
   async geocode() {
-    const response = await axios.get(
+    const response = await fetch(
       `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
         this.location
       )}&key=${process.env.GEOCODING_API_KEY}`
     );
-    const location = response.data.results[0].geometry.location;
-    this.latitude = location.lat;
-    this.longitude = location.lng;
+    // const location = response.data.results[0].geometry.location;
+    // this.latitude = location.lat;
+    // this.longitude = location.lng;
+
+    const data = await response.json();
+    this.latitude = data.results[0].geometry.location.lat;
+    this.longitude = data.results[0].geometry.location.lng;
   }
 
   @CreateDateColumn()
