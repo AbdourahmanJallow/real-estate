@@ -9,12 +9,15 @@ import {
 } from '../types/property.types';
 
 import { User } from '../entities/user.entity';
+import { Image } from '../entities/image.entity';
 
 export class PropertyService {
   private propertyRepo: Repository<Property>;
+  private imageRepo: Repository<Image>;
 
   constructor() {
     this.propertyRepo = AppDataSource.getRepository(Property);
+    this.imageRepo = AppDataSource.getRepository(Image);
   }
 
   async findAll(): Promise<ServiceResponse<Property[]>> {
@@ -36,7 +39,8 @@ export class PropertyService {
 
   async create(
     data: CreatePropertyDTO,
-    agent?: User
+    agent?: User,
+    files?: Express.Multer.File[]
   ): Promise<ServiceResponse<Property>> {
     return await AppDataSource.transaction(async (transactionManager) => {
       //   data.agent = agent;
@@ -51,6 +55,21 @@ export class PropertyService {
       });
 
       const result = await transactionManager.save(property);
+
+      if (files && files.length > 0) {
+        const images = files.map((file) => {
+          const filename = `${Date.now()}-${file.originalname}`;
+
+          return this.imageRepo.create({
+            url: `/uploads/images/${filename}`,
+            filename,
+            size: file.size,
+            property: property,
+          });
+        });
+
+        await transactionManager.save(images);
+      }
 
       return { success: true, data: result };
     });
