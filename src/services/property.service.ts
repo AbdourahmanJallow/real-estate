@@ -58,7 +58,7 @@ export class PropertyService {
 
       if (files && files.length > 0) {
         const images = files.map((file) => {
-          const filename = `${Date.now()}-${file.originalname}`;
+          const filename = `${Date.now()}-${file.filename}`;
 
           return this.imageRepo.create({
             url: `/uploads/images/${filename}`,

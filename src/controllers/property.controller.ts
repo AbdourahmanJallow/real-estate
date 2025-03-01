@@ -32,20 +32,24 @@ export const getProperty = asyncHandler(
 );
 
 /**
- * @@description        Create a property
+ * @description         Create a property
  * @routes              POST /api/v1/properties
  * @access              Private
  */
 export const createProperty = asyncHandler(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    const response = await propertyService.create(req.body);
+    const response = await propertyService.create(
+      req.body,
+      req.user!,
+      req.files as Express.Multer.File[]
+    );
 
     res.status(200).json(response);
   }
 );
 
 /**
- *  @@description       Update a property
+ *  @description       Update a property
  *  @routes             PUT /api/v1/properties/:id
  *  @access             Private
  */
@@ -83,10 +87,3 @@ export const searchProperties = asyncHandler(
     res.send('Search properties not implemented');
   }
 );
-
-/**
- * @@description        Get property reviews
- * @routes              GET /api/v1/properties/:id/reviews
- * @access              Public
- *
- */
