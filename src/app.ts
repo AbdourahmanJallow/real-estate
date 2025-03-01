@@ -22,6 +22,33 @@ app.use(logger);
 // API ROUTES
 app.use('/api/v1/properties', propertyRoutes);
 
+// function listRoutes(app: express.Application) {
+//   app._router.stack.forEach((middleware: any) => {
+//     if (middleware.route) {
+//       // Routes registered directly on the app
+//       console.log(
+//         `${Object.keys(middleware.route.methods).join(', ').toUpperCase()} ${
+//           middleware.route.path
+//         }`
+//       );
+//     } else if (middleware.name === 'router') {
+//       // Routes added as router middleware
+//       middleware.handle.stack.forEach((handler: any) => {
+//         const route = handler.route;
+//         if (route) {
+//           console.log(
+//             `${Object.keys(route.methods).join(', ').toUpperCase()} ${
+//               route.path
+//             }`
+//           );
+//         }
+//       });
+//     }
+//   });
+// }
+
+// listRoutes(app);
+
 // ERROR HANDLER
 app.use(errorHandler);
 
