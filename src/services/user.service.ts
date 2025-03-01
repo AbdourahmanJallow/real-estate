@@ -22,7 +22,7 @@ export class UserService {
 
     if (!name || !email || !password)
       throw new ApiError(
-        'Missing required fields: name, email or password',
+        'Missing required fields: name, email or password.',
         400
       );
 

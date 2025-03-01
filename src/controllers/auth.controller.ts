@@ -1,6 +1,4 @@
 import { Request, Response } from 'express';
-import { User } from '../entities/user.entity';
-import jwt from 'jsonwebtoken';
 import asyncHandler from '../middlewares/asyncHandler';
 import { AuthService } from '../services/auth.service';
 
@@ -13,13 +11,9 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const login = asyncHandler(async (req: Request, res: Response) => {
-  const result = await authService.login(req.body);
+  const { token } = await authService.login(req.body);
 
-  //   const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET!, {
-  // expiresIn: '1h',
-  //   });
-  //
-  res.status(200).json({ success: true });
+  res.status(200).json({ success: true, token });
 });
 
 export const logout = asyncHandler(async (req: Request, res: Response) => {
