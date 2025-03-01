@@ -5,7 +5,9 @@ import {
   OneToMany,
   CreateDateColumn,
   UpdateDateColumn,
+  BeforeInsert,
 } from 'typeorm';
+import bcrypt from 'bcryptjs';
 import { Property } from './property.entity';
 import { UserRole } from '../types/user.types';
 import { Review } from './review.entity';
@@ -31,6 +33,15 @@ export class User {
   @Column()
   password!: string;
 
+  @BeforeInsert()
+  async hashPassword() {
+    this.password = await bcrypt.hash(this.password, 10);
+  }
+
+  async validatePassword(password: string): Promise<boolean> {
+    return await bcrypt.compare(password, this.password);
+  }
+
   @Column({
     type: 'enum',
     enum: UserRole,
@@ -42,7 +53,6 @@ export class User {
    * A User(agent) can have many properties.
    */
   @OneToMany(() => Property, (property) => property.agent, {
-    // eager: true,
     cascade: true,
   })
   properties?: Property[];
@@ -51,7 +61,6 @@ export class User {
    * A User(tenant) can make reviews on a property
    */
   @OneToMany(() => Review, (review) => review.user, {
-    // eager: true,
     cascade: true,
   })
   reviews?: Review[];
@@ -60,7 +69,6 @@ export class User {
    * A User can make many offers on different properties
    */
   @OneToMany(() => Offer, (offer) => offer.user, {
-    // eager: true,
     cascade: true,
   })
   offers?: Offer[];
@@ -73,7 +81,6 @@ export class User {
     () => PropertyTransaction,
     (transaction) => transaction.createdBy,
     {
-      // eager: true,
       cascade: true,
     }
   )
@@ -83,7 +90,6 @@ export class User {
    * A User can view multiple properties
    */
   @OneToMany(() => Viewing, (viewing) => viewing.user, {
-    // eager: true,
     cascade: true,
   })
   viewings?: Viewing[];
@@ -92,7 +98,6 @@ export class User {
    * An admin can have many activty logs
    */
   @OneToMany(() => AdminActivityLog, (log) => log.admin, {
-    // eager: true,
     cascade: false,
   })
   adminLogs?: AdminActivityLog[];

@@ -6,7 +6,9 @@ import {
   OneToMany,
   CreateDateColumn,
   UpdateDateColumn,
+  BeforeInsert,
 } from 'typeorm';
+import axios from 'axios';
 import { User } from './user.entity';
 import { Image } from './image.entity';
 import { Review } from './review.entity';
@@ -31,6 +33,12 @@ export class Property {
 
   @Column()
   location!: string;
+
+  @Column({ nullable: true })
+  latitude!: number;
+
+  @Column({ nullable: true })
+  longitude!: number;
 
   @OneToMany(() => Image, (image) => image.property, {
     cascade: true,
@@ -85,6 +93,18 @@ export class Property {
     cascade: true,
   })
   viewings!: Viewing[];
+
+  @BeforeInsert()
+  async geocode() {
+    const response = await axios.get(
+      `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+        this.location
+      )}&key=${process.env.GEOCODING_API_KEY}`
+    );
+    const location = response.data.results[0].geometry.location;
+    this.latitude = location.lat;
+    this.longitude = location.lng;
+  }
 
   @CreateDateColumn()
   createdAt!: Date;
