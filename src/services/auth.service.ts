@@ -3,7 +3,7 @@ import { Repository } from 'typeorm';
 import { ServiceResponse } from '../types/property.types';
 
 import { User } from '../entities/user.entity';
-import { UserService } from './user.service';
+import { CreateUserDTO, UserService } from './user.service';
 import ApiError from '../utils/ApiError';
 import jwt from 'jsonwebtoken';
 
@@ -21,11 +21,11 @@ export class AuthService {
     this.userService = new UserService();
   }
 
-  async registerUser(registerDTO: {
-    name: string;
-    email: string;
-    password: string;
-  }): Promise<void> {}
+  async registerUser(registerDTO: CreateUserDTO): Promise<User> {
+    const user = await this.userService.createUser(registerDTO);
+
+    return user;
+  }
 
   async login(loginDTO: {
     email: string;
