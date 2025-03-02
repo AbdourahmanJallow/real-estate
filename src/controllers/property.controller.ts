@@ -50,8 +50,8 @@ export const createProperty = asyncHandler(
 
 /**
  *  @description       Update a property
- *  @routes             PUT /api/v1/properties/:id
- *  @access             Private
+ *  @routes            PUT /api/v1/properties/:id
+ *  @access            Private
  */
 export const updateProperty = asyncHandler(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {

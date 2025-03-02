@@ -47,7 +47,10 @@ export class Property {
   images!: Image[];
 
   @Column({ type: 'enum', enum: PropertyStatus })
-  status!: PropertyStatus;
+  availabilityStatus!: PropertyStatus;
+
+  @Column('simple-array')
+  amenities!: string[];
 
   /**
    * Many properties belong to one User(agent) entity.

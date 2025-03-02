@@ -6,6 +6,9 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   BeforeInsert,
+  OneToOne,
+  JoinColumn,
+  BeforeUpdate,
 } from 'typeorm';
 import bcrypt from 'bcryptjs';
 import { Property } from './property.entity';
@@ -15,7 +18,11 @@ import { Offer } from './offer.entity';
 import { PropertyTransaction } from './transaction.entity';
 import { Viewing } from './viewing.entity';
 import { AdminActivityLog } from './admin-activity-log.entity';
-
+import { Image } from './image.entity';
+import { geocodeAddress } from '../utils/geocode';
+import { Favorite } from './favorite.entity';
+import { Message } from './message.entity';
+import { Notification } from './notification.entity';
 /**
  * User: Entity for user attributes and properties
  */
@@ -33,6 +40,22 @@ export class User {
   @Column()
   password!: string;
 
+  @Column({ nullable: true })
+  address!: string;
+
+  @Column({ nullable: true })
+  phoneNumber!: string;
+
+  @Column({ type: 'float', nullable: true })
+  latitude?: number;
+
+  @Column({ type: 'float', nullable: true })
+  longitude?: number;
+
+  @OneToOne(() => Image, (image) => image.user, { nullable: true })
+  @JoinColumn()
+  profilePicture?: Image;
+
   constructor(name: string, email: string, password: string) {
     this.name = name;
     this.email = email;
@@ -42,6 +65,16 @@ export class User {
   @BeforeInsert()
   async hashPassword() {
     this.password = await bcrypt.hash(this.password, 10);
+  }
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  async setGeolocation() {
+    if (this.address) {
+      const { latitude, longitude } = await geocodeAddress(this.address);
+      this.latitude = latitude;
+      this.longitude = longitude;
+    }
   }
 
   async validatePassword(password: string): Promise<boolean> {
@@ -54,6 +87,30 @@ export class User {
     default: UserRole.TENANT,
   })
   role!: UserRole;
+
+  @OneToMany(() => Favorite, (favorite) => favorite.user)
+  favorites?: Favorite[];
+
+  /**
+   * A User can send and receive messages
+   */
+  @OneToMany(() => Message, (message) => message.sender, {
+    cascade: true,
+  })
+  sentMessages?: Message[];
+
+  @OneToMany(() => Message, (message) => message.receiver, {
+    cascade: true,
+  })
+  receivedMessages?: Message[];
+
+  /**
+   * A User can have many notifications
+   */
+  @OneToMany(() => Notification, (notification) => notification.user, {
+    cascade: true,
+  })
+  notifications?: Notification[];
 
   /**
    * A User(agent) can have many properties.

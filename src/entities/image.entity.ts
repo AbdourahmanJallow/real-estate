@@ -5,8 +5,10 @@ import {
   ManyToOne,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToOne,
 } from 'typeorm';
 import { Property } from './property.entity';
+import { User } from './user.entity';
 
 /**
  * Images uploaded by a User(agent) belongs to a property.
@@ -31,7 +33,13 @@ export class Image {
   @ManyToOne(() => Property, (property) => property.images, {
     onDelete: 'CASCADE',
   })
-  property!: Property;
+  property?: Property;
+
+  /**
+   * A user has one profile picture.
+   */
+  @OneToOne(() => User, (user) => user.profilePicture)
+  user?: User;
 
   @CreateDateColumn()
   createdAt!: Date;

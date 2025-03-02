@@ -35,3 +35,7 @@ export const updatePassword = asyncHandler(
     res.status(200).json({ success: true });
   }
 );
+
+// export const uploadProfilePicture = [
+//   asyncHandler(async (req: Request, res: Response) => {}),
+// ];
