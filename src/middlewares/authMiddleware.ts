@@ -11,7 +11,7 @@ interface AuthRequest extends Request {
 const userService = new UserService();
 
 export const authenticateJWT = (
-  req: AuthRequest,
+  req: Request,
   res: Response,
   next: NextFunction
 ) => {

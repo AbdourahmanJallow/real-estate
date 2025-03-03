@@ -1,6 +1,6 @@
 import { AppDataSource } from '../data-source';
 import { Repository } from 'typeorm';
-import { ServiceResponse } from '../types/property.types';
+import { ServiceResponse } from '../enums/property.types';
 
 import { User } from '../entities/user.entity';
 import { CreateUserDTO, UserService } from './user.service';

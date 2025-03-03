@@ -1,15 +1,35 @@
 import { AppDataSource } from '../data-source';
 import { Repository } from 'typeorm';
 import { Property } from '../entities/property.entity';
-import {
-  CreatePropertyDTO,
-  PropertyStatus,
-  ServiceResponse,
-  UpdatePropertyDTO,
-} from '../types/property.types';
+import { PropertyStatus } from '../enums/property.types';
 
 import { User } from '../entities/user.entity';
 import { Image } from '../entities/image.entity';
+
+export class CreatePropertyDTO {
+  name!: string;
+  description!: string;
+  price!: number;
+  location!: string;
+  status!: PropertyStatus;
+  agent?: User;
+  images?: Image[];
+}
+
+export class UpdatePropertyDTO {
+  name?: string;
+  description?: string;
+  price?: number;
+  location?: string;
+  status?: PropertyStatus;
+  images?: Image[];
+}
+
+export interface ServiceResponse<T> {
+  success?: boolean;
+  message?: string;
+  data: T;
+}
 
 export class PropertyService {
   private propertyRepo: Repository<Property>;

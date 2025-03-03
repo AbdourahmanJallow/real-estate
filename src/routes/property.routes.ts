@@ -17,7 +17,7 @@ const router = Router();
 router
   .route('/')
   .get(getProperties)
-  .post(upload.array('images', 10), createProperty);
+  .post(authenticateJWT, upload.array('images', 10), createProperty);
 
 router
   .route('/:id')

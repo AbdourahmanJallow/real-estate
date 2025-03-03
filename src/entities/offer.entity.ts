@@ -8,8 +8,12 @@ import {
 } from 'typeorm';
 import { Property } from './property.entity';
 import { User } from './user.entity';
-import { OfferStatus } from '../types/offer.types';
 
+export enum OfferStatus {
+  PENDING = 'pending',
+  ACCEPTED = 'accepted',
+  REJECTED = 'rejected',
+}
 @Entity()
 export class Offer {
   @PrimaryGeneratedColumn()

@@ -8,13 +8,24 @@ import {
 } from 'typeorm';
 import { User } from './user.entity';
 import { Property } from './property.entity';
-import { TransactionType } from '../types/transaction.types';
 
 export enum PaymentStatus {
   PENDING = 'pending',
   COMPLETED = 'completed',
   FAILED = 'failed',
   REFUNDED = 'refunded',
+}
+
+export enum TransactionStatus {
+  PENDING = 'pending',
+  COMPLETED = 'completed',
+  CANCELLED = 'cancelled',
+}
+
+export enum TransactionType {
+  PURCHASE = 'purchase',
+  RENTAL = 'rental',
+  //   CANCELLED = 'cancelled',
 }
 
 @Entity()

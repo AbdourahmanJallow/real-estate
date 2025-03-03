@@ -15,7 +15,12 @@ import { Review } from './review.entity';
 import { Offer } from './offer.entity';
 import { PropertyTransaction } from './transaction.entity';
 import { Viewing } from './viewing.entity';
-import { PropertyStatus } from '../types/property.types';
+
+export enum PropertyStatus {
+  NOT_AVAILABLE = 'not_available',
+  AVAILABLE = 'available',
+  RENTED = 'rented',
+}
 
 @Entity()
 export class Property {
@@ -49,7 +54,7 @@ export class Property {
   @Column({ type: 'enum', enum: PropertyStatus })
   availabilityStatus!: PropertyStatus;
 
-  @Column('simple-array', { nullable: true })
+  @Column('simple-array')
   amenities!: string[];
 
   /**

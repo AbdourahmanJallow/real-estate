@@ -12,7 +12,6 @@ import {
 } from 'typeorm';
 import bcrypt from 'bcryptjs';
 import { Property } from './property.entity';
-import { UserRole } from '../types/user.types';
 import { Review } from './review.entity';
 import { Offer } from './offer.entity';
 import { PropertyTransaction } from './transaction.entity';
@@ -23,6 +22,13 @@ import { geocodeAddress } from '../utils/geocode';
 import { Favorite } from './favorite.entity';
 import { Message } from './message.entity';
 import { Notification } from './notification.entity';
+
+export enum UserRole {
+  ADMIN = 'admin',
+  AGENT = 'agent',
+  TENANT = 'tenant',
+}
+
 /**
  * User: Entity for user attributes and properties
  */
