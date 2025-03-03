@@ -6,6 +6,7 @@ import { Image } from '../entities/image.entity';
 import { User } from '../entities/user.entity';
 
 export enum PropertyStatus {
+  NOT_AVAILABLE = 'not_available',
   AVAILABLE = 'available',
   RENTED = 'rented',
 }

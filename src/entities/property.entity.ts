@@ -49,7 +49,7 @@ export class Property {
   @Column({ type: 'enum', enum: PropertyStatus })
   availabilityStatus!: PropertyStatus;
 
-  @Column('simple-array')
+  @Column('simple-array', { nullable: true })
   amenities!: string[];
 
   /**
