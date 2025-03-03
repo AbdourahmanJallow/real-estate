@@ -1,10 +1,11 @@
 import { AppDataSource } from '../data-source';
-import { Repository } from 'typeorm';
+import { Between, Repository } from 'typeorm';
 import { Property } from '../entities/property.entity';
 import { PropertyStatus } from '../enums/property.types';
 
 import { User } from '../entities/user.entity';
 import { Image } from '../entities/image.entity';
+import { UserService } from './user.service';
 
 export class CreatePropertyDTO {
   name!: string;
@@ -34,10 +35,12 @@ export interface ServiceResponse<T> {
 export class PropertyService {
   private propertyRepo: Repository<Property>;
   private imageRepo: Repository<Image>;
+  private userService: UserService;
 
   constructor() {
     this.propertyRepo = AppDataSource.getRepository(Property);
     this.imageRepo = AppDataSource.getRepository(Image);
+    this.userService = new UserService();
   }
 
   async findAll(): Promise<ServiceResponse<Property[]>> {
@@ -47,6 +50,61 @@ export class PropertyService {
       success: true,
       data: properties,
     };
+  }
+
+  async findNearByProperties(
+    userId: number,
+    radius: number
+  ): Promise<Property[]> {
+    const user = await this.userService.findOneById(userId);
+
+    if (!user.latitude || !user.longitude) {
+      throw new Error('User location not set.');
+    }
+
+    const properties = await this.propertyRepo.find();
+    // {
+    //   where: {
+    //     latitude: Between(user.latitude - radius, user.latitude + radius),
+    //     longitude: Between(user.longitude - radius, user.longitude + radius),
+    //   },
+    // }
+
+    return properties.filter((property) => {
+      const distance = this.calulateDistance(
+        user.latitude as number,
+        user.longitude as number,
+        property.latitude as number,
+        property.longitude
+      );
+
+      return distance <= radius;
+    });
+  }
+
+  private calulateDistance(
+    lat1: number,
+    long1: number,
+    lat2: number,
+    long2: number
+  ): number {
+    const R = 6371; // Radius of the earth in km
+    const deltaLat = this.degreeToRadian(lat2 - lat1);
+    const deltaLong = this.degreeToRadian(long2 - long1);
+
+    const a =
+      Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
+      Math.cos(this.degreeToRadian(lat1)) *
+        Math.cos(this.degreeToRadian(lat2)) *
+        Math.sin(deltaLong / 2);
+
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    return R * c;
+  }
+
+  private degreeToRadian(deg: number): number {
+    return deg * (Math.PI / 180);
   }
 
   async findById(id: number): Promise<ServiceResponse<Property>> {

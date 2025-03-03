@@ -11,6 +11,7 @@ declare global {
       DB_NAME: string;
       DB_TYPE: string;
       JWT_SECRET: string;
+      OPENCAGE_API_KEY: string;
     }
   }
 }
