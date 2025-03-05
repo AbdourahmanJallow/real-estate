@@ -5,4 +5,5 @@ dist/
 .dockerignore
 Dockerfile
 docker-compose.yml
-# dist
+src/public/
+public/

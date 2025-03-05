@@ -2,10 +2,11 @@ import { AppDataSource } from '../data-source';
 import { Between, Repository } from 'typeorm';
 import { Property } from '../entities/property.entity';
 import { PropertyStatus } from '../enums/property.types';
-
 import { User } from '../entities/user.entity';
 import { Image } from '../entities/image.entity';
 import { UserService } from './user.service';
+import path from 'path';
+import fs from 'fs';
 
 export class CreatePropertyDTO {
   name!: string;
@@ -118,40 +119,54 @@ export class PropertyService {
   }
 
   async create(
-    data: CreatePropertyDTO,
+    newPropertDTO: CreatePropertyDTO,
     agent?: User,
     files?: Express.Multer.File[]
   ): Promise<ServiceResponse<Property>> {
     return await AppDataSource.transaction(async (transactionManager) => {
       //   data.agent = agent;
       // Perform validations
-      if (!data.name || !data.description || !data.price || !data.location) {
+      if (
+        !newPropertDTO.name ||
+        !newPropertDTO.description ||
+        !newPropertDTO.price ||
+        !newPropertDTO.location
+      ) {
         throw new Error('Missing required property fields.');
       }
 
-      const property = transactionManager.create(Property, {
-        ...data,
-        status: PropertyStatus.AVAILABLE,
+      let newProperty = transactionManager.create(Property, {
+        ...newPropertDTO,
+        availabilityStatus: PropertyStatus.NOT_AVAILABLE,
       });
 
-      const result = await transactionManager.save(property);
+      newProperty = await transactionManager.save(newProperty);
 
       if (files && files.length > 0) {
+        console.log('Uploading images...');
+        console.log(files);
+
         const images = files.map((file) => {
           const filename = `${Date.now()}-${file.filename}`;
+          // const filePath = path.join(
+          //   __dirname,
+          //   '../public/uploads/images',
+          //   filename
+          // );
+          // fs.writeFileSync(filePath, file.buffer);
 
           return this.imageRepo.create({
             url: `/uploads/images/${filename}`,
             filename,
             size: file.size,
-            property: property,
+            property: newProperty,
           });
         });
 
         await transactionManager.save(images);
       }
 
-      return { success: true, data: result };
+      return { success: true, data: newProperty };
     });
   }
 

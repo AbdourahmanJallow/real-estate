@@ -38,13 +38,15 @@ export const getProperty = asyncHandler(
  */
 export const createProperty = asyncHandler(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    const response = await propertyService.create(
+    console.log('Request body', req.body);
+    console.log('Request Files', req.files);
+    const newProperty = await propertyService.create(
       req.body,
       req.user!,
       req.files as Express.Multer.File[]
     );
 
-    res.status(200).json(response);
+    res.status(200).json(newProperty);
   }
 );
 
