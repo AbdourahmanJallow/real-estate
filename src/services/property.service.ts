@@ -5,8 +5,6 @@ import { PropertyStatus } from '../enums/property.types';
 import { User } from '../entities/user.entity';
 import { Image } from '../entities/image.entity';
 import { UserService } from './user.service';
-import path from 'path';
-import fs from 'fs';
 
 export class CreatePropertyDTO {
   name!: string;
@@ -143,21 +141,12 @@ export class PropertyService {
       newProperty = await transactionManager.save(newProperty);
 
       if (files && files.length > 0) {
-        console.log('Uploading images...');
-        console.log(files);
-
         const images = files.map((file) => {
-          const filename = `${Date.now()}-${file.filename}`;
-          // const filePath = path.join(
-          //   __dirname,
-          //   '../public/uploads/images',
-          //   filename
-          // );
-          // fs.writeFileSync(filePath, file.buffer);
+          // const filename = `${Date.now()}-${file.filename}`;
 
           return this.imageRepo.create({
-            url: `/uploads/images/${filename}`,
-            filename,
+            url: `/uploads/images/${file.filename}`,
+            filename: file.filename,
             size: file.size,
             property: newProperty,
           });

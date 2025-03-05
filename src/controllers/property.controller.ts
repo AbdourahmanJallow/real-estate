@@ -37,9 +37,7 @@ export const getProperty = asyncHandler(
  * @access              Private
  */
 export const createProperty = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    console.log('Request body', req.body);
-    console.log('Request Files', req.files);
+  async (req: Request, res: Response): Promise<void> => {
     const newProperty = await propertyService.create(
       req.body,
       req.user!,
@@ -56,7 +54,7 @@ export const createProperty = asyncHandler(
  *  @access            Private
  */
 export const updateProperty = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  async (req: Request, res: Response): Promise<void> => {
     const response = await propertyService.update(
       parseInt(req.params.id),
       req.body
@@ -72,7 +70,7 @@ export const updateProperty = asyncHandler(
  * @access              Private
  */
 export const deleteProperty = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  async (req: Request, res: Response): Promise<void> => {
     const response = await propertyService.delete(parseInt(req.params.id));
 
     res.status(200).json(response);
