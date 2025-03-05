@@ -58,7 +58,7 @@ export class PropertyService {
   ): Promise<Property[]> {
     const user = await this.userService.findOneById(userId);
 
-    if (!user.latitude || !user.longitude) {
+    if (!user.coordinates) {
       throw new Error('User location not set.');
     }
 
@@ -70,12 +70,14 @@ export class PropertyService {
     //   },
     // }
 
+    const { lat, lng } = user.coordinates;
+
     return properties.filter((property) => {
       const distance = this.calulateDistance(
-        user.latitude as number,
-        user.longitude as number,
-        property.latitude as number,
-        property.longitude
+        lat,
+        lng,
+        property.coordinates?.lat as number,
+        property.coordinates?.lng as number
       );
 
       return distance <= radius;

@@ -7,14 +7,15 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   BeforeInsert,
+  BeforeUpdate,
 } from 'typeorm';
-import axios from 'axios';
 import { User } from './user.entity';
 import { Image } from './image.entity';
 import { Review } from './review.entity';
 import { Offer } from './offer.entity';
 import { PropertyTransaction } from './transaction.entity';
 import { Viewing } from './viewing.entity';
+import { geocodeAddress } from '../utils/geocode';
 
 export enum PropertyStatus {
   NOT_AVAILABLE = 'not_available',
@@ -39,11 +40,8 @@ export class Property {
   @Column()
   location!: string;
 
-  @Column({ nullable: true })
-  latitude!: number;
-
-  @Column({ nullable: true })
-  longitude!: number;
+  @Column({ type: 'json', nullable: true })
+  coordinates?: { lat: number; lng: number };
 
   @OneToMany(() => Image, (image) => image.property, {
     cascade: true,
@@ -103,19 +101,13 @@ export class Property {
   viewings!: Viewing[];
 
   @BeforeInsert()
-  async geocode() {
-    const response = await fetch(
-      `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
-        this.location
-      )}&key=${process.env.GEOCODING_API_KEY}`
-    );
-    // const location = response.data.results[0].geometry.location;
-    // this.latitude = location.lat;
-    // this.longitude = location.lng;
+  @BeforeUpdate()
+  async setGeolocation() {
+    if (this.location) {
+      const { latitude, longitude } = await geocodeAddress(this.location);
 
-    const data = await response.json();
-    this.latitude = data.results[0].geometry.location.lat;
-    this.longitude = data.results[0].geometry.location.lng;
+      this.coordinates = { lat: latitude, lng: longitude };
+    }
   }
 
   @CreateDateColumn()

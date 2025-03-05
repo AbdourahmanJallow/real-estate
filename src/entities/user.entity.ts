@@ -52,11 +52,8 @@ export class User {
   @Column({ nullable: true })
   phoneNumber!: string;
 
-  @Column({ type: 'float', nullable: true })
-  latitude?: number;
-
-  @Column({ type: 'float', nullable: true })
-  longitude?: number;
+  @Column({ type: 'json', nullable: true })
+  coordinates?: { lat: number; lng: number };
 
   @OneToOne(() => Image, (image) => image.user, { nullable: true })
   @JoinColumn()
@@ -78,8 +75,7 @@ export class User {
   async setGeolocation() {
     if (this.address) {
       const { latitude, longitude } = await geocodeAddress(this.address);
-      this.latitude = latitude;
-      this.longitude = longitude;
+      this.coordinates = { lat: latitude, lng: longitude };
     }
   }
 
