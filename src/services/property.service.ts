@@ -118,7 +118,7 @@ export class PropertyService {
 
   async create(
     newPropertDTO: CreatePropertyDTO,
-    agent?: User,
+    agent?: User | null,
     files?: Express.Multer.File[]
   ): Promise<ServiceResponse<Property>> {
     return await AppDataSource.transaction(async (transactionManager) => {

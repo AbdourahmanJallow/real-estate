@@ -22,7 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(logger);
 
 // API ROUTES
-app.use('/api/v1/auth', authRoutes);
+// app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/properties', propertyRoutes);
 
 // function listRoutes(app: express.Application) {

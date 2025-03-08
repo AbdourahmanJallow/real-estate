@@ -9,7 +9,7 @@ declare global {
       DB_USERNAME: string;
       DB_PASSWORD: string;
       DB_NAME: string;
-      DB_TYPE: string;
+      DB_TYPE: any;
       JWT_SECRET: string;
       OPENCAGE_API_KEY: string;
     }
