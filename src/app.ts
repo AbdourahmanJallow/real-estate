@@ -1,6 +1,6 @@
 import express from 'express';
 import { logger } from './middlewares/logger';
-import bodyParser from 'body-parser';
+// import bodyParser from 'body-parser';
 import path from 'path';
 import cors from 'cors';
 import 'colors';
@@ -8,7 +8,7 @@ import 'reflect-metadata';
 
 // route imports
 import propertyRoutes from './routes/property.routes';
-import authRoutes from './routes/auth.routes';
+// import authRoutes from './routes/auth.routes';
 
 import errorHandler from './middlewares/errorHandler';
 
