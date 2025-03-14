@@ -4,7 +4,8 @@ WORKDIR /app
 
 COPY package*.json ./
 
-RUN npm install --only=development
+# Install dependencies, including development dependencies
+RUN npm install --production=false
 
 COPY . .
 
@@ -12,4 +13,8 @@ ENV PORT=8080
 
 EXPOSE 8080
 
-CMD ["npm", "start"]
+# build typescript code
+RUN npm run build
+
+# ru application in dev mode
+CMD ["npm", "run", "dev"]
