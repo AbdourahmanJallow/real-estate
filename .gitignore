@@ -3,7 +3,5 @@ node_modules/
 temp-project/
 dist/
 .dockerignore
-Dockerfile
-docker-compose.yml
 src/public/
 public/

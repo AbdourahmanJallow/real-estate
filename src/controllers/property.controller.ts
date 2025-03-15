@@ -40,7 +40,7 @@ export const createProperty = asyncHandler(
   async (req: Request, res: Response): Promise<void> => {
     const newProperty = await propertyService.create(
       req.body,
-      req.user!,
+      null,
       req.files as Express.Multer.File[]
     );
 
