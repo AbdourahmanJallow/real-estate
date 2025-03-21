@@ -6,11 +6,13 @@
   "scripts": {
     "build": "tsc",
     "start": "node node_modules/typeorm/cli.js --dataSource dist/data-source.js migration:run && node dist/server.js",
+    "start1": "npm run build && npm run migration:run && node dist/server.js",
     "dev": "nodemon --exec ts-node src/server.ts",
     "dev1": "ts-node-dev --respawn --transpile-only src/server.ts",
     "lint": "eslint \"src/**/*.ts\" --config eslint.config.mjs",
     "typeorm": "ts-node -r tsconfig-paths/register node_modules/typeorm/cli.js --dataSource src/data-source.ts",
     "migration:generate": "npm run typeorm migration:generate",
+    "NEW:migration:run": "npm run build && node node_modules/typeorm/cli.js --dataSource dist/data-source.js migration:run",
     "migration:run": "npm run typeorm migration:run",
     "migration:revert": "npm run typeorm migration:revert"
   },

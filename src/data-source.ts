@@ -15,6 +15,8 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 export const AppDataSource = new DataSource({
   type: 'postgres',
   host: process.env.DB_HOST || 'localhost', // use localhost for development
@@ -24,19 +26,23 @@ export const AppDataSource = new DataSource({
   database: process.env.DB_NAME || 'real_estate',
   synchronize: false,
   logging: false,
-  entities: [
-    User,
-    Review,
-    Image,
-    Offer,
-    Viewing,
-    Property,
-    PropertyTransaction,
-    AdminActivityLog,
-    Favorite,
-    Notification,
-    Message,
-  ],
-  migrations: ['src/migration/**/*.ts'],
+  entities: isProduction
+    ? ['dist/entities/*.js']
+    : [
+        User,
+        Review,
+        Image,
+        Offer,
+        Viewing,
+        Property,
+        PropertyTransaction,
+        AdminActivityLog,
+        Favorite,
+        Notification,
+        Message,
+      ],
+  // migrations: ['src/migration/**/*.ts'],
+  // migrations: [__dirname + '/../dist/migration/*.js'],
+  migrations: isProduction ? ['dist/migration/*.js'] : ['src/migration/*.ts'],
   subscribers: [],
 });
