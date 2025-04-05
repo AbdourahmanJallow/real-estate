@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import asyncHandler from '../middlewares/asyncHandler';
 import { PropertyService } from '../services/property.service';
 

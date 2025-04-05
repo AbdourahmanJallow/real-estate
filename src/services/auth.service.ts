@@ -1,6 +1,5 @@
 import { AppDataSource } from '../data-source';
 import { Repository } from 'typeorm';
-import { ServiceResponse } from '../enums/property.types';
 
 import { User } from '../entities/user.entity';
 import { CreateUserDTO, UserService } from './user.service';
@@ -9,7 +8,8 @@ import jwt from 'jsonwebtoken';
 
 export interface LoginResult {
   success: boolean;
-  token: string;
+  accessToken: string;
+  refreshToken: string;
 }
 
 export class AuthService {
@@ -37,16 +37,38 @@ export class AuthService {
       throw new ApiError('Invalid credentials.', 403);
     }
 
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET!, {
-      expiresIn: '1h',
-    });
+    const accessToken = this.generateAccessToken(user);
+    const refreshToken = this.generateRefreshToken(user);
 
-    return { success: true, token };
+    return { success: true, accessToken, refreshToken };
+  }
+
+  private generateAccessToken(user: User): string {
+    return jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+      expiresIn: '1hr',
+    });
+  }
+  private generateRefreshToken(user: User): string {
+    return jwt.sign({ id: user.id }, process.env.JWT_REFRESH_SECRET, {
+      expiresIn: '1d',
+    });
   }
 
   async logout(): Promise<void> {}
 
-  async resfreshToken(): Promise<void> {}
+  async resfreshToken(token: string): Promise<string> {
+    const payload = jwt.verify(token, process.env.JWT_REFRESH_SECRET) as {
+      id: number;
+    };
+
+    if (!payload) throw new Error('Invalid token. Failed to refresh token.');
+
+    const user = await this.userRepo.findOneBy({ id: payload.id });
+
+    if (!user) throw new Error('User not found. Failed to refresh token.');
+
+    return this.generateAccessToken(user);
+  }
 
   async updatePassword(): Promise<void> {}
 }
