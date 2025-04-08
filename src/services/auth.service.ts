@@ -40,32 +40,45 @@ export class AuthService {
     const accessToken = this.generateAccessToken(user);
     const refreshToken = this.generateRefreshToken(user);
 
+    user.refreshToken = refreshToken;
+    await this.userRepo.save(user);
+
     return { success: true, accessToken, refreshToken };
   }
 
   private generateAccessToken(user: User): string {
-    return jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+    return jwt.sign({ id: user.id }, process.env.JWT_SECRET!, {
       expiresIn: '1hr',
     });
   }
   private generateRefreshToken(user: User): string {
-    return jwt.sign({ id: user.id }, process.env.JWT_REFRESH_SECRET, {
+    return jwt.sign({ id: user.id }, process.env.JWT_REFRESH_SECRET!, {
       expiresIn: '1d',
     });
   }
 
-  async logout(): Promise<void> {}
+  async logout(userId: number): Promise<void> {
+    const user = await this.userRepo.findOneBy({ id: userId });
+    if (!user) throw new Error('User not found.');
+
+    user.refreshToken = null;
+    await this.userRepo.save(user);
+  }
 
   async resfreshToken(token: string): Promise<string> {
-    const payload = jwt.verify(token, process.env.JWT_REFRESH_SECRET) as {
-      id: number;
-    };
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_REFRESH_SECRET!
+    ) as unknown;
+    const payload = decoded as { id: number };
 
-    if (!payload) throw new Error('Invalid token. Failed to refresh token.');
+    if (!payload || !payload.id)
+      throw new Error('Invalid token. Failed to refresh token.');
 
     const user = await this.userRepo.findOneBy({ id: payload.id });
 
-    if (!user) throw new Error('User not found. Failed to refresh token.');
+    if (!user || user.refreshToken !== token)
+      throw new Error('Invalid token. Failed to refresh token.');
 
     return this.generateAccessToken(user);
   }

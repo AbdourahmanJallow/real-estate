@@ -7,8 +7,8 @@ import 'colors';
 import 'reflect-metadata';
 
 // route imports
-import propertyRoutes from './routes/property.routes';
-// import authRoutes from './routes/auth.routes';
+import propertyRouter from './routes/property.routes';
+import authRouter from './routes/auth.routes';
 
 import errorHandler from './middlewares/errorHandler';
 
@@ -22,8 +22,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(logger);
 
 // API ROUTES
-// app.use('/api/v1/auth', authRoutes);
-app.use('/api/v1/properties', propertyRoutes);
+app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/properties', propertyRouter);
 
 // function listRoutes(app: express.Application) {
 //   app._router.stack.forEach((middleware: any) => {

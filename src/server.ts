@@ -9,14 +9,14 @@ import 'colors';
 import { AppDataSource } from './data-source';
 
 const PORT = process.env.PORT || 8800;
-const HOST = process.env.HOST || 'localhost'
+const HOST = process.env.HOST || 'localhost';
 
 import app from './app';
 
 AppDataSource.initialize()
   .then(async () => {
     const server = app.listen(PORT, () => {
-      console.log(`Server running on http://${HOST}:${PORT}`.bgCyan.bold);
+      console.log(`🚀 Server ready at http://${HOST}:${PORT}`.italic);
     });
 
     // Handle unhandled promise rejections

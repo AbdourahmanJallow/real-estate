@@ -52,6 +52,9 @@ export class User {
   @Column({ nullable: true })
   phoneNumber!: string;
 
+  @Column({ nullable: true })
+  refreshToken?: string | null;
+
   @Column({ type: 'json', nullable: true })
   coordinates?: { lat: number; lng: number };
 
