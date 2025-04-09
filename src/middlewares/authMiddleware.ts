@@ -1,7 +1,7 @@
 import { Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { UserService } from '../services/user.service';
-import ApiError from '../utils/ApiError';
+// import ApiError from '../utils/ApiError';
 import { AuthRequest } from '../auth-request';
 
 const userService = new UserService();
@@ -14,23 +14,33 @@ export default async function authenticateJWT(
   try {
     const authHeader = req.headers.authorization;
 
-    if (!authHeader || !authHeader.startsWith('Bearer '))
-      throw new ApiError('Unauthorized', 401);
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      res.status(401).json({ message: 'Unauthorized' });
+      return;
+    }
 
     const token = req.headers.authorization?.split(' ')[1];
 
-    if (!token) throw new ApiError('Unauthorized. No token provided', 401);
+    if (!token) {
+      res.status(401).json({ message: 'Unauthorized. No token provided' });
+      return;
+    }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as {
       id: number;
     };
 
-    if (!decoded) throw new ApiError('Invalid token', 401);
+    if (!decoded) {
+      res.status(401).json({ message: 'Invalid token' });
+      return;
+    }
 
     const user = await userService.findOneById(decoded.id);
 
-    if (!user)
+    if (!user) {
       res.status(401).json({ message: 'Unauthorized. User not found' });
+      return;
+    }
 
     req.user = user;
 
@@ -38,7 +48,7 @@ export default async function authenticateJWT(
   } catch (error) {
     console.error('Jwt error: ', error);
 
-    return res.status(401).json({
+    res.status(401).json({
       message: 'Unauthorized. Failed to authenticate token',
     });
   }

@@ -37,7 +37,7 @@ export class AuthService {
   }): Promise<LoginResult> {
     const user = await this.userRepo.findOneBy({ email: loginDTO.email });
 
-    if (!user || !(await user.validatePassword(user.password))) {
+    if (!user || !(await user.validatePassword(loginDTO.password))) {
       throw new ApiError('Invalid credentials.', 403);
     }
 
