@@ -22,6 +22,7 @@ import { geocodeAddress } from '../utils/geocode';
 import { Favorite } from './favorite.entity';
 import { Message } from './message.entity';
 import { Notification } from './notification.entity';
+import { Exclude } from 'class-transformer';
 
 export enum UserRole {
   ADMIN = 'admin',
@@ -43,6 +44,7 @@ export class User {
   @Column({ unique: true })
   email!: string;
 
+  @Exclude()
   @Column()
   password!: string;
 
@@ -52,7 +54,7 @@ export class User {
   @Column({ nullable: true })
   phoneNumber!: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'text', nullable: true })
   refreshToken?: string | null;
 
   @Column({ type: 'json', nullable: true })

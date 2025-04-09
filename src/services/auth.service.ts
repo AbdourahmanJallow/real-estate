@@ -24,6 +24,10 @@ export class AuthService {
   async registerUser(registerDTO: CreateUserDTO): Promise<User> {
     const user = await this.userService.createUser(registerDTO);
 
+    if (!user) {
+      throw new ApiError(`Failed to create new user`, 400);
+    }
+
     return user;
   }
 

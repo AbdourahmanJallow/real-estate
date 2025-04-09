@@ -7,7 +7,7 @@ import { AuthRequest } from '../auth-request';
 const authService = new AuthService();
 
 export const register = asyncHandler(async (req: Request, res: Response) => {
-  const user = authService.registerUser(req.body);
+  const user = await authService.registerUser(req.body);
 
   res.status(201).json({ success: true, user });
 });

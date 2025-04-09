@@ -8,7 +8,7 @@ dotenv.config();
 import 'colors';
 import { AppDataSource } from './data-source';
 
-const PORT = process.env.PORT || 8800;
+const PORT = process.env.PORT || 3000;
 const HOST = process.env.HOST || 'localhost';
 
 import app from './app';

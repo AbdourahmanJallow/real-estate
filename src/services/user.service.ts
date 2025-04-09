@@ -48,5 +48,11 @@ export class UserService {
     return user;
   }
 
-  async removeUser(userId: number): Promise<void> {}
+  async removeUser(userId: number) {
+    const user = await this.userRepo.findOneBy({ id: userId });
+
+    if (!user) throw new ApiError(`User with id ${userId} not found.`, 404);
+
+    return await this.userRepo.remove(user);
+  }
 }
