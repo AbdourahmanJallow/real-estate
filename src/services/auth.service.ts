@@ -87,6 +87,7 @@ export class AuthService {
     if (!user || user.refreshToken !== token)
       throw new Error('Invalid token. Failed to refresh token.');
 
+    // add token to blacklist
     await this.blacklistToken(token);
 
     const accessToken = this.generateAccessToken(user);

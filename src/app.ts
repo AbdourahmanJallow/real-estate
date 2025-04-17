@@ -30,7 +30,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(logger);
 
 // API ROUTES
-app.get('/', authenticateJWT, (req: Request, res: Response) => {
+app.get('/api/v1', authenticateJWT, (req: Request, res: Response) => {
   res.json({
     message: 'Welcome to the Real Estate API',
   });

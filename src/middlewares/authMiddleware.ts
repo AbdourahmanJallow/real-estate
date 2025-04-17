@@ -29,7 +29,7 @@ export default async function authenticateJWT(
 
     const isBlacklisted = await redisClient.get(token);
     if (isBlacklisted) {
-      res.status(401).json({ message: 'Token is blaclisted' });
+      res.status(401).json({ message: 'Token is blaclisted!' });
       return;
     }
 
@@ -45,7 +45,7 @@ export default async function authenticateJWT(
     const user = await userService.findOneById(decoded.id);
 
     if (!user) {
-      res.status(401).json({ message: 'Unauthorized. User not found' });
+      res.status(401).json({ message: 'Unauthorized. Invalid Credentials' });
       return;
     }
 
