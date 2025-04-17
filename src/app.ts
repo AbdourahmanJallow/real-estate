@@ -32,33 +32,6 @@ app.get('/', authenticateJWT, (req: Request, res: Response) => {
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/properties', propertyRouter);
 
-// function listRoutes(app: express.Application) {
-//   app._router.stack.forEach((middleware: any) => {
-//     if (middleware.route) {
-//       // Routes registered directly on the app
-//       console.log(
-//         `${Object.keys(middleware.route.methods).join(', ').toUpperCase()} ${
-//           middleware.route.path
-//         }`
-//       );
-//     } else if (middleware.name === 'router') {
-//       // Routes added as router middleware
-//       middleware.handle.stack.forEach((handler: any) => {
-//         const route = handler.route;
-//         if (route) {
-//           console.log(
-//             `${Object.keys(route.methods).join(', ').toUpperCase()} ${
-//               route.path
-//             }`
-//           );
-//         }
-//       });
-//     }
-//   });
-// }
-
-// listRoutes(app);
-
 // ERROR HANDLER
 app.use(errorHandler);
 

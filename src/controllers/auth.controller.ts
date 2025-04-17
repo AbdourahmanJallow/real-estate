@@ -44,7 +44,7 @@ export const refresh = asyncHandler(
       return;
     }
 
-    const newAccessToken = await authService.resfreshToken(refreshToken);
+    const newAccessToken = await authService.refreshToken(refreshToken);
 
     res.json({ success: true, accessToken: newAccessToken });
   }

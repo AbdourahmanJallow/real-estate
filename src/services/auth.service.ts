@@ -69,7 +69,7 @@ export class AuthService {
     await this.userRepo.save(user);
   }
 
-  async resfreshToken(token: string): Promise<string> {
+  async refreshToken(token: string): Promise<LoginResult> {
     const decoded = jwt.verify(
       token,
       process.env.JWT_REFRESH_SECRET!
@@ -84,7 +84,12 @@ export class AuthService {
     if (!user || user.refreshToken !== token)
       throw new Error('Invalid token. Failed to refresh token.');
 
-    return this.generateAccessToken(user);
+    const accessToken = this.generateAccessToken(user);
+    const refreshToken = this.generateRefreshToken(user);
+    user.refreshToken = refreshToken;
+    await this.userRepo.save(user);
+
+    return { success: true, accessToken, refreshToken };
   }
 
   async updatePassword(): Promise<void> {}
