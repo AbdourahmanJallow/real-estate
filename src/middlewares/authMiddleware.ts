@@ -28,8 +28,10 @@ export default async function authenticateJWT(
     }
 
     const isBlacklisted = await redisClient.get(token);
-    if (isBlacklisted)
-      return res.status(401).json({ message: 'Token is blaclisted' });
+    if (isBlacklisted) {
+      res.status(401).json({ message: 'Token is blaclisted' });
+      return;
+    }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as {
       id: number;
