@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import { UserService } from '../services/user.service';
 // import ApiError from '../utils/ApiError';
 import { AuthRequest } from '../auth-request';
+import redisClient from '../utils/redisClient';
 
 const userService = new UserService();
 
@@ -25,6 +26,10 @@ export default async function authenticateJWT(
       res.status(401).json({ message: 'Unauthorized. No token provided' });
       return;
     }
+
+    const isBlacklisted = await redisClient.get(token);
+    if (isBlacklisted)
+      return res.status(401).json({ message: 'Token is blaclisted' });
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as {
       id: number;

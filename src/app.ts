@@ -1,10 +1,11 @@
+import 'colors';
+import 'reflect-metadata';
 import express, { Request, Response } from 'express';
 import { logger } from './middlewares/logger';
+import rateLimit from 'express-rate-limit';
 // import bodyParser from 'body-parser';
 import path from 'path';
 import cors from 'cors';
-import 'colors';
-import 'reflect-metadata';
 
 // route imports
 import propertyRouter from './routes/property.routes';
@@ -14,6 +15,12 @@ import errorHandler from './middlewares/errorHandler';
 import authenticateJWT from './middlewares/authMiddleware';
 
 const app = express();
+
+export const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5, // Limit each IP to 5 requests per windowMs
+  message: 'Too many requests, please try again later.',
+});
 
 // MIDDLEWARE CONFIGURATION
 app.use(cors());

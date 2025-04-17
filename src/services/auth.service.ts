@@ -5,6 +5,7 @@ import { User } from '../entities/user.entity';
 import { CreateUserDTO, UserService } from './user.service';
 import ApiError from '../utils/ApiError';
 import jwt from 'jsonwebtoken';
+import redisClient from '../utils/redisClient';
 
 export interface LoginResult {
   success: boolean;
@@ -61,9 +62,11 @@ export class AuthService {
     });
   }
 
-  async logout(userId: number): Promise<void> {
+  async logout(token: string, userId: number): Promise<void> {
     const user = await this.userRepo.findOneBy({ id: userId });
     if (!user) throw new Error('User not found.');
+
+    await this.blacklistToken(token!);
 
     user.refreshToken = null;
     await this.userRepo.save(user);
@@ -84,6 +87,8 @@ export class AuthService {
     if (!user || user.refreshToken !== token)
       throw new Error('Invalid token. Failed to refresh token.');
 
+    await this.blacklistToken(token);
+
     const accessToken = this.generateAccessToken(user);
     const refreshToken = this.generateRefreshToken(user);
     user.refreshToken = refreshToken;
@@ -93,4 +98,12 @@ export class AuthService {
   }
 
   async updatePassword(): Promise<void> {}
+
+  async blacklistToken(token: string) {
+    const decoded = jwt.decode(token) as { exp: number };
+    if (!decoded || !decoded.exp) throw new Error('Invalid token.');
+
+    const expiresIn = decoded.exp * 1000 - Date.now();
+    await redisClient.set(token, 'blacklisted', { PX: expiresIn });
+  }
 }
