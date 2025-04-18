@@ -1,5 +1,6 @@
 import { NextFunction, Response, Request } from 'express';
 import ApiError from '../utils/ApiError';
+import { QueryFailedError } from 'typeorm';
 
 const errorHandler = (
   err: ApiError,
@@ -10,14 +11,27 @@ const errorHandler = (
   let error = { ...err };
   error.message = err.message;
 
-  // console.log(error);
-  console.error('🔴 Error:', {
-    message: err.message,
-    stack: err.stack,
-    route: req.originalUrl,
-    method: req.method,
-    functionName: err.stack?.split('\n')[1]?.trim() || 'Unknown Function',
-  });
+  console.log(error);
+
+  // Handle TypeORM QueryFailedError for duplicate key
+  if (
+    err instanceof QueryFailedError &&
+    err.message.includes('duplicate key')
+  ) {
+    const queryError = err as QueryFailedError & { detail?: string }; // Cast to include 'detail'
+    const field = queryError.detail?.match(/\((.*?)\)/)?.[1] || 'field';
+    const message = `Duplicate value for ${field}. Please use a different value.`;
+
+    error = new ApiError(message, 400);
+  }
+
+  // console.error('🔴 Error:', {
+  //   message: err.message,
+  //   stack: err.stack,
+  //   route: req.originalUrl,
+  //   method: req.method,
+  //   functionName: err.stack?.split('\n')[1]?.trim() || 'Unknown Function',
+  // });
 
   res.status(error.statusCode || 500).json({
     success: false,

@@ -12,6 +12,7 @@ declare global {
       DB_TYPE: string;
       JWT_SECRET: string;
       OPENCAGE_API_KEY: string;
+      JWT_REFRESH_SECRET: string;
     }
   }
 }

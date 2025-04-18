@@ -1,30 +1,62 @@
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { UserService } from '../services/user.service';
-import { User } from '../entities/user.entity';
-import ApiError from '../utils/ApiError';
-
-interface AuthRequest extends Request {
-  user?: User;
-}
+// import ApiError from '../utils/ApiError';
+import { AuthRequest } from '../auth-request';
+import redisClient from '../utils/redisClient';
 
 const userService = new UserService();
 
-export const authenticateJWT = (
-  req: Request,
+export default async function authenticateJWT(
+  req: AuthRequest,
   res: Response,
   next: NextFunction
-) => {
-  const token = req.headers.authorization?.split(' ')[1];
+) {
+  try {
+    const authHeader = req.headers.authorization;
 
-  if (!token) throw new ApiError('No token provided', 401);
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      res.status(401).json({ message: 'Unauthorized' });
+      return;
+    }
 
-  jwt.verify(token, process.env.JWT_SECRET!, async (err, decoded: any) => {
-    if (err) throw new ApiError('Invalid token', 401);
+    const token = req.headers.authorization?.split(' ')[1];
+
+    if (!token) {
+      res.status(401).json({ message: 'Unauthorized. No token provided' });
+      return;
+    }
+
+    const isBlacklisted = await redisClient.get(token);
+    if (isBlacklisted) {
+      res.status(401).json({ message: 'Token is blaclisted!' });
+      return;
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as {
+      id: number;
+    };
+
+    if (!decoded) {
+      res.status(401).json({ message: 'Invalid token' });
+      return;
+    }
 
     const user = await userService.findOneById(decoded.id);
+
+    if (!user) {
+      res.status(401).json({ message: 'Unauthorized. Invalid Credentials' });
+      return;
+    }
+
     req.user = user;
 
     next();
-  });
-};
+  } catch (error) {
+    console.error('Jwt error: ', error);
+
+    res.status(401).json({
+      message: 'Unauthorized. Failed to authenticate token',
+    });
+  }
+}

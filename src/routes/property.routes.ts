@@ -6,7 +6,7 @@ import {
   updateProperty,
   getProperty,
 } from '../controllers/property.controller';
-import { authenticateJWT } from '../middlewares/authMiddleware';
+// import authenticateJWT  from '../middlewares/authMiddleware';
 import upload from '../middlewares/uploadMiddleware';
 /**
  * TODO: allow only authenticated users to create, update, and delete properties
