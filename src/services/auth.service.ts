@@ -53,7 +53,7 @@ export class AuthService {
 
   private generateAccessToken(user: User): string {
     return jwt.sign({ id: user.id }, process.env.JWT_SECRET!, {
-      expiresIn: '1hr',
+      expiresIn: '2hr',
     });
   }
   private generateRefreshToken(user: User): string {
