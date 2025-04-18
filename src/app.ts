@@ -3,6 +3,8 @@ import 'reflect-metadata';
 import express, { Request, Response } from 'express';
 import { logger } from './middlewares/logger';
 import rateLimit from 'express-rate-limit';
+import cookieParser from 'cookie-parser';
+
 // import bodyParser from 'body-parser';
 import path from 'path';
 import cors from 'cors';
@@ -23,6 +25,7 @@ export const limiter = rateLimit({
 });
 
 // MIDDLEWARE CONFIGURATION
+app.use(cookieParser());
 app.use(cors());
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));

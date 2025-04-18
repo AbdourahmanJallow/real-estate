@@ -43,6 +43,7 @@ export const logout = asyncHandler(async (req: AuthRequest, res: Response) => {
 export const refresh = asyncHandler(
   async (req: Request, res: Response): Promise<void> => {
     const token = req.cookies.refreshToken;
+    console.log('Cookies ', req.cookies);
     if (!token) {
       res.status(403).json({ message: 'Refresh token not provided.' });
       return;
@@ -50,6 +51,7 @@ export const refresh = asyncHandler(
 
     // Is token blacklisted?
     if (await redisClient.get(token)) {
+      console.log('refresh token is already blacklisted...');
       res
         .status(403)
         .json({ message: 'UnAuthorized: refresh token is blacklisted!' });
