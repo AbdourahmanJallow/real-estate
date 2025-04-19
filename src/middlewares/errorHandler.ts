@@ -25,14 +25,6 @@ const errorHandler = (
     error = new ApiError(message, 400);
   }
 
-  // console.error('🔴 Error:', {
-  //   message: err.message,
-  //   stack: err.stack,
-  //   route: req.originalUrl,
-  //   method: req.method,
-  //   functionName: err.stack?.split('\n')[1]?.trim() || 'Unknown Function',
-  // });
-
   res.status(error.statusCode || 500).json({
     success: false,
     message: error.message || 'Internal Server Error.',

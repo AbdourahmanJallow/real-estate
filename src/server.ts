@@ -21,7 +21,7 @@ AppDataSource.initialize()
 
     // Handle unhandled promise rejections
     process.on('unhandledRejection', (err: Error) => {
-      console.log(`Error: ${err.message}`);
+      console.log(`❌ Error: ${err.message}`);
 
       // close server and exit
       server.close(() => process.exit(1));
