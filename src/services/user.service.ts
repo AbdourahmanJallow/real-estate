@@ -2,13 +2,16 @@ import { AppDataSource } from '../data-source';
 import { Repository } from 'typeorm';
 import { ServiceResponse } from '../enums/property.types';
 
-import { User } from '../entities/user.entity';
+import { User, UserRole } from '../entities/user.entity';
 import ApiError from '../utils/ApiError';
 
-export interface CreateUserDTO {
+export interface UserDTO {
   name: string;
   email: string;
   password: string;
+  address?: string;
+  phoneNumber?: string;
+  role?: UserRole;
 }
 export class UserService {
   private userRepo: Repository<User>;
@@ -17,8 +20,8 @@ export class UserService {
     this.userRepo = AppDataSource.getRepository(User);
   }
 
-  async createUser(registerDTO: CreateUserDTO): Promise<User> {
-    const { name, email, password } = registerDTO;
+  async createUser(userData: UserDTO): Promise<User> {
+    const { name, email, password } = userData;
 
     if (!name || !email || !password)
       throw new ApiError(
@@ -26,7 +29,9 @@ export class UserService {
         400
       );
 
-    const newUser = new User(name, email, password);
+    const newUser = this.userRepo.create({
+      ...userData,
+    });
 
     return await this.userRepo.save(newUser);
   }

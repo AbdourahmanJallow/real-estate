@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 import asyncHandler from '../middlewares/asyncHandler';
 import { PropertyService } from '../services/property.service';
+import { AuthRequest } from '../auth-request';
+import { User } from '../entities/user.entity';
 
 const propertyService = new PropertyService();
 
@@ -37,10 +39,12 @@ export const getProperty = asyncHandler(
  * @access              Private
  */
 export const createProperty = asyncHandler(
-  async (req: Request, res: Response): Promise<void> => {
+  async (req: AuthRequest, res: Response): Promise<void> => {
+    const user = req.user as User;
+    console.log('--------user------', user);
     const newProperty = await propertyService.create(
       req.body,
-      null,
+      user,
       req.files as Express.Multer.File[]
     );
 
@@ -54,7 +58,7 @@ export const createProperty = asyncHandler(
  *  @access            Private
  */
 export const updateProperty = asyncHandler(
-  async (req: Request, res: Response): Promise<void> => {
+  async (req: AuthRequest, res: Response): Promise<void> => {
     const response = await propertyService.update(
       parseInt(req.params.id),
       req.body
@@ -70,7 +74,7 @@ export const updateProperty = asyncHandler(
  * @access              Private
  */
 export const deleteProperty = asyncHandler(
-  async (req: Request, res: Response): Promise<void> => {
+  async (req: AuthRequest, res: Response): Promise<void> => {
     const response = await propertyService.delete(parseInt(req.params.id));
 
     res.status(200).json(response);

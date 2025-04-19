@@ -8,6 +8,7 @@ import redisClient from '../utils/redisClient';
 const authService = new AuthService();
 
 export const register = asyncHandler(async (req: Request, res: Response) => {
+  console.log('Rigestering new user-------', req.body);
   const user = await authService.registerUser(req.body);
 
   res.status(201).json({ success: true, user });
