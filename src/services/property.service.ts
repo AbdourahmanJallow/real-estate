@@ -42,7 +42,7 @@ export class PropertyService {
     this.userService = new UserService();
   }
 
-  async findAll(): Promise<ServiceResponse<Property[]>> {
+  async getAllProperties(): Promise<ServiceResponse<Property[]>> {
     const properties = await this.propertyRepo.find();
 
     return {

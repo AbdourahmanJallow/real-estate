@@ -100,7 +100,7 @@ export class AuthService {
 
   async updatePassword(): Promise<void> {}
 
-  async blacklistToken(token: string) {
+  private async blacklistToken(token: string) {
     const decoded = jwt.decode(token) as { exp: number };
     if (!decoded || !decoded.exp) throw new Error('Invalid token.');
 

@@ -12,7 +12,7 @@ const propertyService = new PropertyService();
  */
 export const getProperties = asyncHandler(
   async (req: Request, res: Response): Promise<void> => {
-    const result = await propertyService.findAll();
+    const result = await propertyService.getAllProperties();
 
     res.status(200).json(result);
   }
