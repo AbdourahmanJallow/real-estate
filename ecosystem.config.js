@@ -1,7 +1,3 @@
-import dotenv from 'dotenv';
-
-dotenv.config();
-
 module.exports = {
   apps: [
     {
@@ -25,13 +21,13 @@ module.exports = {
     },
   ],
 
-  deploy: {
+    deploy: {
     production: {
-      user: process.env.SSH_USER || 'user',
-      host: process.env.DB_HOST || 'localhost',
+      user: 'devopuser',
+      host: '209.38.200.92', 
       ref: 'origin/main',
-      repo: process.env.REPO_URL || '',
-      path: process.env.DEPLOY_PATH || '/var/www/production',
+      repo: 'git@github.com:AbdourahmanJallow/real-estate.git', 
+      path: '/var/www/production',
       'pre-deploy-local': '',
       'post-deploy':
         'npm install && npm run build && npm run migration:run && pm2 reload ecosystem.config.js --env production',
