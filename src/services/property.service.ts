@@ -1,5 +1,5 @@
 import { AppDataSource } from '../data-source';
-import { Between, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Property } from '../entities/property.entity';
 import { PropertyStatus } from '../enums/property.types';
 import { User } from '../entities/user.entity';
