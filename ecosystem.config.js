@@ -21,13 +21,13 @@ module.exports = {
     },
   ],
 
-    deploy: {
+  deploy: {
     production: {
-      user: 'devopuser',
-      host: '209.38.200.92', 
+      user: process.env.DEPLOY_USER,
+      host: process.env.DEPLOY_HOST,
       ref: 'origin/main',
-      repo: 'git@github.com:AbdourahmanJallow/real-estate.git', 
-      path: '/var/www/production',
+      repo: 'git@github.com:AbdourahmanJallow/real-estate.git',
+      path: process.env.DEPLOY_PATH,
       'pre-deploy-local': '',
       'post-deploy':
         'npm install && npm run build && npm run migration:run && pm2 reload ecosystem.config.js --env production',

@@ -2,7 +2,7 @@ import { AppDataSource } from '../data-source';
 import { Repository } from 'typeorm';
 
 import { User } from '../entities/user.entity';
-import { CreateUserDTO, UserService } from './user.service';
+import { UserDTO, UserService } from './user.service';
 import ApiError from '../utils/ApiError';
 import jwt from 'jsonwebtoken';
 import redisClient from '../utils/redisClient';
@@ -22,11 +22,11 @@ export class AuthService {
     this.userService = new UserService();
   }
 
-  async registerUser(registerDTO: CreateUserDTO): Promise<User> {
-    const user = await this.userService.createUser(registerDTO);
+  async registerUser(userData: UserDTO): Promise<User> {
+    const user = await this.userService.createUser(userData);
 
     if (!user) {
-      throw new ApiError(`Failed to create new user`, 400);
+      throw new Error(`Failed to create new user`);
     }
 
     return user;

@@ -40,7 +40,7 @@ app.get('/api/v1', authenticateJWT, (req: Request, res: Response) => {
 });
 
 app.use('/api/v1/auth', authRouter);
-app.use('/api/v1/properties', propertyRouter);
+app.use('/api/v1/properties', authenticateJWT, propertyRouter);
 
 // ERROR HANDLER
 app.use(errorHandler);

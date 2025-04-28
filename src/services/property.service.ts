@@ -118,7 +118,7 @@ export class PropertyService {
 
   async create(
     newPropertDTO: CreatePropertyDTO,
-    agent?: User | null,
+    agent: User,
     files?: Express.Multer.File[]
   ): Promise<ServiceResponse<Property>> {
     return await AppDataSource.transaction(async (transactionManager) => {
@@ -137,6 +137,7 @@ export class PropertyService {
         ...newPropertDTO,
         availabilityStatus: PropertyStatus.NOT_AVAILABLE,
       });
+      newProperty.agent = agent;
 
       newProperty = await transactionManager.save(newProperty);
 
