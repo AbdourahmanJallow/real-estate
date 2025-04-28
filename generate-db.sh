@@ -3,14 +3,14 @@
 # Exit immediately if a command exits with a non-zero status
 set -e
 
-# PostgreSQL superuser role to use for executing commands
+
 PG_SUPERUSER="postgres"
 
-# Database name and user
+
 DB_NAME="real_estate"
 DB_USER="postgres"
 
-# Function to create a PostgreSQL database if it doesn't already exist
+
 create_database() {
     local db_name=$1
     local db_user=$2
@@ -28,7 +28,7 @@ EOSQL
     fi
 }
 
-# Function to install uuid-ossp extension in a PostgreSQL database
+# install uuid-ossp extension PG DB
 install_uuid_ossp_extension() {
     local db_name=$1
 
@@ -39,10 +39,8 @@ EOSQL
     echo "uuid-ossp extension installed successfully in '$db_name'."
 }
 
-# Create the database if it does not exist
 create_database "$DB_NAME" "$DB_USER"
 
-# Install uuid-ossp extension in the database
 install_uuid_ossp_extension "$DB_NAME"
 
 echo "✅ Database '$DB_NAME' with owner '$DB_USER' has been checked or created successfully."
