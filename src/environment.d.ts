@@ -13,6 +13,9 @@ declare global {
       JWT_SECRET: string;
       OPENCAGE_API_KEY: string;
       JWT_REFRESH_SECRET: string;
+      DEPLOY_USER: string;
+      DEPLOY_HOST: string;
+      DEPLOY_PATH: string;
     }
   }
 }
